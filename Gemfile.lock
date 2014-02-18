@@ -28,6 +28,7 @@ GEM
     arel (4.0.2)
     atomic (1.1.14)
     builder (3.1.4)
+    database_cleaner (1.2.0)
     diff-lcs (1.2.5)
     erubis (2.7.0)
     execjs (2.0.2)
@@ -100,6 +101,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
+  database_cleaner
   jquery-rails
   pg
   rails
