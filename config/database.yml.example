@@ -9,7 +9,7 @@ development:
   database: funds-tracker-development
   pool: 5
   username:
-  password
+  password:
 
 # Warning: The database defined as "test" will be erased and
 # re-generated from your development database when you run "rake".
@@ -20,7 +20,7 @@ test:
   database: funds-tracker-test
   pool: 5
   username:
-  password
+  password:
 
 production:
   adapter: postgresql
@@ -28,4 +28,4 @@ production:
   database: funds-tracker
   pool: 5
   username:
-  password
+  password:
