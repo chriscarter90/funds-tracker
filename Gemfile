@@ -1,5 +1,7 @@
 source 'https://rubygems.org'
 
+ruby '2.0.0', patchlevel: '247'
+
 gem 'rails'
 gem 'pg'
 
@@ -9,6 +11,10 @@ gem 'jquery-rails'
 
 gem 'foreman', require: false
 gem 'devise'
+
+gem 'bourbon'
+gem 'neat'
+gem 'bitters'
 
 group :test do
   gem 'database_cleaner'
