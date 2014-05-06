@@ -51,8 +51,15 @@ RSpec.configure do |config|
   config.order = "random"
 
   config.before :suite do
-          DatabaseCleaner.clean_with :truncation
-              end
+    DatabaseCleaner.clean_with :truncation
+
+    begin
+      DatabaseCleaner.start
+      FactoryGirl.lint
+    ensure
+      DatabaseCleaner.clean
+    end
+  end
 
   # Use transactional database cleaning strategy by default.
   config.before :each do

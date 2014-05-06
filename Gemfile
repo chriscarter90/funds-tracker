@@ -11,7 +11,18 @@ gem 'foreman', require: false
 gem 'devise'
 
 group :test do
-  gem 'rspec'
   gem 'database_cleaner'
   gem 'fuubar'
+  gem 'poltergeist'
+  gem 'shoulda-matchers'
 end
+
+group :test, :development do
+  gem 'factory_girl_rails', "~> 4.0"
+  gem 'rspec-rails'
+  gem 'capybara'
+end
+
+# Use debugger
+gem 'pry', group: [:development, :test]
+gem 'pry-debugger', group: [:development, :test]
