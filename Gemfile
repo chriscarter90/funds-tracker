@@ -10,4 +10,5 @@ gem 'jquery-rails'
 group :test do
   gem 'rspec'
   gem 'database_cleaner'
+  gem 'fuubar'
 end
