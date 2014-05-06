@@ -16,7 +16,7 @@ gem 'normalize-rails'
 gem 'bourbon'
 gem 'neat'
 gem 'bitters'
-gem 'tabnav'
+gem 'tabnav', github: 'unboxed/tabnav', branch: 'add-ul-styling'
 
 group :test do
   gem 'database_cleaner'
