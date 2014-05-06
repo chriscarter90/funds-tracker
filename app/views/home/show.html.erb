@@ -1,22 +1,3 @@
 <% if current_user.present? %>
   Logged in as <%= current_user.email %>
 <% end %>
-
-<%= render_tabnav do |nav|
-  if current_user.present?
-    nav.add_tab do |tab|
-      tab.named "Log out"
-      tab.links_to destroy_user_session_path, method: :delete
-    end
-  else
-    nav.add_tab do |tab|
-      tab.named "Log in"
-      tab.links_to new_user_session_path
-    end
-
-    nav.add_tab do |tab|
-      tab.named "Sign up"
-      tab.links_to new_user_registration_path
-    end
-  end
-end %>
