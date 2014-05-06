@@ -54,6 +54,7 @@ RSpec.configure do |config|
     DatabaseCleaner.clean_with :truncation
 
     begin
+      puts "Linting factories..."
       DatabaseCleaner.start
       FactoryGirl.lint
     ensure
