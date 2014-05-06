@@ -12,6 +12,7 @@ gem 'jquery-rails'
 gem 'foreman', require: false
 gem 'devise'
 
+gem 'normalize-rails'
 gem 'bourbon'
 gem 'neat'
 gem 'bitters'

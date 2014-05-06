@@ -92,6 +92,7 @@ GEM
       sass (>= 3.2)
     nokogiri (1.6.1)
       mini_portile (~> 0.5.0)
+    normalize-rails (3.0.1)
     orm_adapter (0.4.0)
     pg (0.17.1)
     poltergeist (1.5.0)
@@ -189,6 +190,7 @@ DEPENDENCIES
   fuubar
   jquery-rails
   neat
+  normalize-rails
   pg
   poltergeist
   pry
