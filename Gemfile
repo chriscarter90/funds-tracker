@@ -8,6 +8,7 @@ gem 'uglifier', '>= 1.3.0'
 gem 'jquery-rails'
 
 gem 'foreman', require: false
+gem 'devise'
 
 group :test do
   gem 'rspec'
