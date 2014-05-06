@@ -16,6 +16,7 @@ gem 'normalize-rails'
 gem 'bourbon'
 gem 'neat'
 gem 'bitters'
+gem 'tabnav'
 
 group :test do
   gem 'database_cleaner'
