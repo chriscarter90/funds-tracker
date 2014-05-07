@@ -1,3 +1,7 @@
+body {
+  background-color: $grey-e1;
+}
+
 .outer {
   @include outer-container;
 }

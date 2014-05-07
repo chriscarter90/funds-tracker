@@ -1,12 +1,15 @@
-$red: #F37257;
-$orange: #F68D5C;
-$yellow: #F4D27A;
-$dark-blue: #517281;
-$blue: #7895A2;
-$light-blue: #AFC1CC;
+$blue: #004489;
+$grey-e1: #e1e1d6;
+$grey-d3: #d3d9df;
+$grey-98: #989898;
+$grey-56: #565656;
+$grey-db: #dbdbdb;
 $white: white;
+
+$link-blue: #087BA0;
+$link-darker-blue: darken($link-blue, 20%);
 
 $font-family: 'PT Serif', serif;
 
-$link-color: $light-blue;
-$link-hover-color: $white;
+$link-color: $link-blue;
+$link-hover-color: $link-darker-blue;

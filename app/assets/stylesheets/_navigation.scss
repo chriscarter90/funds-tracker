@@ -1,5 +1,5 @@
 .top-navigation-container {
-  background-color: $dark-blue;
+  background-color: $grey-56;
 
   .nav-inner {
     padding: 12px 0;
@@ -9,14 +9,32 @@
 .top-navigation {
   @include clearfix;
 
-  .top-logo {
+  .nav-left {
     float: left;
-    font-size: 24px;
+  }
+
+  .nav-right {
+    float: right;
+  }
+
+  .top-logo {
+    @include white-link;
+    a {
+      display: inline-block;
+      font-size: 24px;
+    }
+  }
+
+  .logged-in {
+    color: $white;
+    float: left;
+    display: inline-block;
   }
 
   .navigation-links {
-    float: right;
+    float: left;
     li {
+      @include white-link;
       display: inline-block;
       margin: 0 8px;
     }

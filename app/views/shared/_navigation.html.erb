@@ -2,26 +2,42 @@
   <div class="outer">
     <div class="nav-inner">
       <nav class="top-navigation">
-        <%= link_to "£und$₮ra¢K€r", root_path, class: "top-logo" %>
+        <ul class="nav-left">
+          <li class="top-logo">
+            <%= link_to "£und$Tra¢k€r", root_path %>
+          </li>
+        </ul>
 
-        <%= render_tabnav class: "navigation-links" do |nav|
-          if current_user.present?
-            nav.add_tab do |tab|
-              tab.named "Log out"
-              tab.links_to destroy_user_session_path, method: :delete
-            end
-          else
-            nav.add_tab do |tab|
-              tab.named "Log in"
-              tab.links_to new_user_session_path
-            end
+        <ul class="nav-right">
+          <% if current_user.present? %>
+            <li class="logged-in">
+              <p>
+                Logged in as <%= current_user.email %>
+              </p>
+            </li>
+          <% end %>
 
-            nav.add_tab do |tab|
-              tab.named "Sign up"
-              tab.links_to new_user_registration_path
-            end
-          end
-        end %>
+          <li>
+            <%= render_tabnav class: "navigation-links" do |nav|
+              if current_user.present?
+                nav.add_tab do |tab|
+                  tab.named "Log out"
+                  tab.links_to destroy_user_session_path, method: :delete
+                end
+              else
+                nav.add_tab do |tab|
+                  tab.named "Log in"
+                  tab.links_to new_user_session_path
+                end
+
+                nav.add_tab do |tab|
+                  tab.named "Sign up"
+                  tab.links_to new_user_registration_path
+                end
+              end
+            end %>
+          </li>
+        </ul>
       </nav>
     </div>
   </div>

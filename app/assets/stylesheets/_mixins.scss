@@ -2,3 +2,12 @@
   font-size: $font-size;
   line-height: $line-height;
 }
+
+@mixin white-link {
+  a {
+    color: $white;
+    &:hover {
+      color: darken($white, 20%);
+    }
+  }
+}
