@@ -125,5 +125,21 @@ feature "Accounts", %q{
         expect(page).to have_content("Account could not be found.")
       end
     end
+
+    scenario "deleting an account" do
+      account = FactoryGirl.create(:account, name: "Old Account", user: @user)
+
+      visit accounts_path
+
+      expect(page).to have_link("Delete")
+
+      click_link "Delete"
+
+      expect(current_path).to eq accounts_path
+
+      expect(page).to_not have_content("Old Account")
+
+      expect(page).to have_content("Account successfully deleted.")
+    end
   end
 end

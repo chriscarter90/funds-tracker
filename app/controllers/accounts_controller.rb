@@ -1,6 +1,6 @@
 class AccountsController < ApplicationController
   before_action :authenticate_user!
-  before_action :find_account, only: [:edit, :update]
+  before_action :find_account, only: [:edit, :update, :destroy]
 
   def index
     @accounts = current_user.accounts
@@ -31,6 +31,12 @@ class AccountsController < ApplicationController
       flash[:alert] = "Account not updated."
       render :edit
     end
+  end
+
+  def destroy
+    @account.destroy
+
+    redirect_to accounts_path, notice: "Account successfully deleted."
   end
 
   protected
