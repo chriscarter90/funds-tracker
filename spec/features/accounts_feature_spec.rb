@@ -49,7 +49,11 @@ feature "Accounts", %q{
     end
 
     scenario "Creating a new account" do
-      visit new_account_path
+      visit accounts_path
+
+      expect(page).to have_link("New Account", href: new_account_path)
+
+      click_link "New Account"
 
       expect(page).to have_content("New Account")
 

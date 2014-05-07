@@ -1,5 +1,7 @@
 <h3>Accounts</h3>
 
+<%= link_to "New Account", new_account_path %>
+
 <% if @accounts.any? %>
   <ul>
     <% @accounts.each do |a| %>
