@@ -21,12 +21,3 @@
 
 en:
   hello: "Hello world"
-  number:
-    currency:
-        format:
-            format: "%u%n"
-            unit: "&pound;"
-            # These three are to override number.format and are optional
-            separator: "."
-            delimiter: ","
-            precision: 2

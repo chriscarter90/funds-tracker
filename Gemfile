@@ -19,6 +19,7 @@ gem 'bitters'
 gem 'tabnav', github: 'unboxed/tabnav', branch: 'add-ul-styling'
 
 gem 'simple_form'
+gem 'rails-i18n'
 
 group :test do
   gem 'database_cleaner'
