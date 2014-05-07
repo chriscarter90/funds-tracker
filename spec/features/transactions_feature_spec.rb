@@ -28,7 +28,11 @@ feature "Transactions", %q{
         account.transactions << [FactoryGirl.create(:transaction, description: "Example Transaction", amount: 30.48),
                                  FactoryGirl.create(:transaction, description: "Another Transaction", amount: 12.34)]
 
-        visit account_path(account)
+        visit accounts_path
+
+        click_link "My Account"
+
+        expect(current_path).to eq account_path(account)
 
         expect(page).to have_content("My Account")
         expect(page).to have_content("Transactions")
