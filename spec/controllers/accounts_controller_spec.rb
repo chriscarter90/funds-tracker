@@ -117,3 +117,56 @@ describe AccountsController, "POST #create" do
     end
   end
 end
+
+describe AccountsController, "GET #edit" do
+  context "As a non-logged in user" do
+    before do
+      account = FactoryGirl.create(:account)
+
+      get :edit, id: account
+    end
+
+    it "redirects to the login page" do
+      expect(response).to redirect_to new_user_session_path
+    end
+  end
+
+  context "As a logged in user" do
+    before do
+      @user = FactoryGirl.create(:user)
+      sign_in @user
+    end
+
+    context "with an account" do
+      before do
+        @account = FactoryGirl.create(:account, user: @user)
+
+        get :edit, id: @account
+      end
+
+      it "should assign the account" do
+        expect(assigns(:account)).to eq @account
+      end
+
+      it "should render the edit template" do
+        expect(response).to render_template :edit
+      end
+    end
+
+    context "accessing an account which isn't theirs" do
+      before do
+        account = FactoryGirl.create(:account)
+
+        get :edit, id: account
+      end
+
+      it "redirects to the index" do
+        expect(response).to redirect_to accounts_path
+      end
+
+      it "sets flash" do
+        expect(flash[:alert]).to eq "Account could not be found."
+      end
+    end
+  end
+end

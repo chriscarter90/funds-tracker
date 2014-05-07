@@ -1,5 +1,6 @@
 class AccountsController < ApplicationController
   before_action :authenticate_user!
+  before_action :find_account, only: [:edit, :update]
 
   def index
     @accounts = current_user.accounts
@@ -20,9 +21,29 @@ class AccountsController < ApplicationController
     end
   end
 
+  def edit
+  end
+
+  def update
+    if @account.update_attributes(account_params)
+      redirect_to accounts_path, notice: "Account successfully updated."
+    else
+      flash[:alert] = "Account not updated."
+      render :edit
+    end
+  end
+
   protected
 
   def account_params
     params.required(:account).permit(:name)
+  end
+
+  def find_account
+    begin
+      @account = current_user.accounts.find(params[:id])
+    rescue ActiveRecord::RecordNotFound => e
+      redirect_to accounts_path, alert: "Account could not be found."
+    end
   end
 end

@@ -7,6 +7,7 @@
     <% @accounts.each do |a| %>
       <li>
         <%= a.name %>
+        <%= link_to "Edit", edit_account_path(a) %>
       </li>
     <% end %>
   </ul>

@@ -20,6 +20,16 @@ feature "Accounts", %q{
 
       expect(page).to have_content("You need to sign in or sign up before continuing.")
     end
+
+    scenario "Trying to edit an existing account" do
+      account = FactoryGirl.create(:account)
+
+      visit edit_account_path(account)
+
+      expect(current_path).to eq new_user_session_path
+
+      expect(page).to have_content("You need to sign in or sign up before continuing.")
+    end
   end
 
   context "As a logged in user" do
@@ -60,6 +70,7 @@ feature "Accounts", %q{
       expect(page).to have_field("Name")
       click_button "Create Account"
 
+      expect(page).to have_content("Account not created.")
       within ".account_name" do
         expect(page).to have_content("can't be blank")
       end
@@ -68,7 +79,51 @@ feature "Accounts", %q{
       click_button "Create Account"
 
       expect(current_path).to eq accounts_path
+      expect(page).to have_content("Account successfully created.")
       expect(page).to have_content("My First Account")
+    end
+
+    context "editing an account" do
+      scenario "as the user whose account it is" do
+        account = FactoryGirl.create(:account, name: "Original Account", user: @user)
+
+        visit accounts_path
+
+        expect(page).to have_content("Original Account")
+        expect(page).to have_link("Edit")
+        click_link("Edit")
+
+        expect(page).to have_content("Edit Account")
+        expect(page).to have_field("Name")
+        fill_in "Name", with: ""
+        click_button "Update Account"
+
+        expect(page).to have_content("Account not updated.")
+        within ".account_name" do
+          expect(page).to have_content("can't be blank")
+        end
+
+        fill_in "Name", with: "Edited Account"
+        click_button "Update Account"
+
+        expect(current_path).to eq accounts_path
+        expect(page).to have_content("Account successfully updated.")
+        expect(page).to have_content("Edited Account")
+      end
+
+      scenario "as a different user" do
+        account = FactoryGirl.create(:account, name: "Not My Account")
+
+        visit accounts_path
+
+        expect(page).to_not have_content("Not My Account")
+
+        visit edit_account_path(account)
+
+        expect(current_path).to eq accounts_path
+
+        expect(page).to have_content("Account could not be found.")
+      end
     end
   end
 end
