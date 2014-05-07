@@ -1,9 +1,13 @@
 class AccountsController < ApplicationController
   before_action :authenticate_user!
-  before_action :find_account, only: [:edit, :update, :destroy]
+  before_action :find_account, only: [:show, :edit, :update, :destroy]
 
   def index
     @accounts = current_user.accounts
+  end
+
+  def show
+    @transactions = @account.transactions
   end
 
   def new

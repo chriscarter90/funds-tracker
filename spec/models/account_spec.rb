@@ -7,4 +7,5 @@ end
 
 describe Account, 'relationships' do
   it { should belong_to :user }
+  it { should have_many :transactions }
 end
