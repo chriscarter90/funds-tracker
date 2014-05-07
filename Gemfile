@@ -18,6 +18,8 @@ gem 'neat'
 gem 'bitters'
 gem 'tabnav', github: 'unboxed/tabnav', branch: 'add-ul-styling'
 
+gem 'simple_form'
+
 group :test do
   gem 'database_cleaner'
   gem 'fuubar'
@@ -29,6 +31,7 @@ group :test, :development do
   gem 'factory_girl_rails', "~> 4.0"
   gem 'rspec-rails'
   gem 'capybara'
+  gem 'faker'
 end
 
 # Use debugger
