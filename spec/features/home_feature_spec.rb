@@ -9,11 +9,11 @@ feature "Home page", %q{
   scenario "As a non-logged in user" do
     visit root_path
 
-    page.should have_content("Sign up")
-    page.should have_content("Log in")
+    expect(page).to have_content("Sign up")
+    expect(page).to have_content("Log in")
 
-    page.should_not have_content("Log out")
-    page.should_not have_content("Logged in as")
+    expect(page).to_not have_content("Log out")
+    expect(page).to_not have_content("Logged in as")
   end
 
   scenario "As a logged in user" do
@@ -22,10 +22,12 @@ feature "Home page", %q{
     user = FactoryGirl.create(:user, email: "bob@ineedalife.com")
     sign_in_as user
 
-    page.should_not have_content("Sign up")
-    page.should_not have_content("Log in")
+    expect(current_path).to eq root_path
 
-    page.should have_content("Log out")
-    page.should have_content("Logged in as bob@ineedalife.com")
+    expect(page).to_not have_content("Sign up")
+    expect(page).to_not have_content("Log in")
+
+    expect(page).to have_content("Log out")
+    expect(page).to have_content("Logged in as bob@ineedalife.com")
   end
 end
