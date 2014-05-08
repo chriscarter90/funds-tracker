@@ -47,6 +47,16 @@ feature "Transactions", %q{
         expect(page).to have_content("£12.34")
       end
 
+      scenario "Viewing an empty list of transactions" do
+        visit account_path(@account)
+
+        expect(page).to have_content("My Account")
+        expect(page).to have_content("Transactions")
+
+        expect(page).to have_content("You have no transactions. Try adding one here.")
+        expect(page).to have_link("here", href: new_account_transaction_path(@account))
+      end
+
       scenario "Adding a transaction to an account" do
         visit accounts_path
 

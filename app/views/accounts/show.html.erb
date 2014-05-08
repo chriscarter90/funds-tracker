@@ -1,12 +1,35 @@
-<h3><%= @account.name %></h3>
-<h4>Transactions</h4>
+<div class="row header-block">
+  <div class="col-md-9">
+    <h3><%= @account.name %></h3>
+    <h4>Transactions</h4>
+  </div>
 
-<%= link_to "Add Transaction", new_account_transaction_path(@account) %>
+  <div class="col-md-3">
+    <%= link_to "Add Transaction", new_account_transaction_path(@account), class: "btn btn-primary" %>
+  </div>
+</div>
 
-<ul>
-  <% @transactions.each do |t| %>
-    <li>
-      <%= t.description %> - <%= transaction_amount(t) %>
-    </li>
-  <% end %>
-</ul>
+<div class="row">
+  <div class="col-md-12">
+    <% if @transactions.any? %>
+      <ul>
+        <% @transactions.each do |t| %>
+          <li>
+            <%= t.description %> - <%= transaction_amount(t) %>
+          </li>
+        <% end %>
+      </ul>
+    <% else %>
+      <div class="panel panel-primary">
+        <div class="panel-heading">
+          <h5>
+            You have no transactions.
+          </h5>
+        </div>
+        <div class="panel-body">
+          Try adding one <%= link_to "here", new_account_transaction_path(@account) %>.
+        </div>
+      </div>
+    <% end %>
+  </div>
+</div>

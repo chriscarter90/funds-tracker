@@ -32,9 +32,16 @@
         <% end %>
       </table>
     <% else %>
-      <p>
-        You have no accounts. Try making one <%= link_to "here", new_account_path %>.
-      </p>
+      <div class="panel panel-default">
+        <div class="panel-heading">
+          <h5>
+            You have no accounts.
+          </h5>
+        </div>
+        <div class="panel-body">
+          Try making one <%= link_to "here", new_account_path %>.
+        </div>
+      </div>
     <% end %>
   </div>
 </div>
