@@ -1,5 +1,14 @@
-<%= simple_form_for @account do |f| %>
-  <%= f.input :name %>
+<%= form_for @account, html: { class: "form-horizontal", role: "form" } do |f| %>
+  <div class="form-group">
+    <%= f.label :name, class: "col-md-2 control-label" %>
+    <div class="col-md-6">
+      <%= f.text_field :name, class: "form-control", placeholder: "Name" %>
+    </div>
+  </div>
 
-  <%= f.button :submit %>
+  <div class="form-group">
+    <div class="col-md-offset-2 col-md-6">
+      <%= f.submit class: "btn btn-primary" %>
+    </div>
+  </div>
 <% end %>
