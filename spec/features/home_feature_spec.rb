@@ -9,11 +9,13 @@ feature "Home page", %q{
   scenario "As a non-logged in user" do
     visit root_path
 
-    expect(page).to have_content("Sign up")
-    expect(page).to have_content("Log in")
+    expect(page).to have_link("Sign up", href: new_user_registration_path)
+    expect(page).to have_link("Log in", href: new_user_session_path)
 
-    expect(page).to_not have_content("Log out")
+    expect(page).to_not have_link("Log out")
     expect(page).to_not have_content("Logged in as")
+
+    expect(page).to_not have_link("Go to my accounts", href: accounts_path)
   end
 
   scenario "As a logged in user" do
@@ -24,10 +26,12 @@ feature "Home page", %q{
 
     expect(current_path).to eq root_path
 
-    expect(page).to_not have_content("Sign up")
-    expect(page).to_not have_content("Log in")
+    expect(page).to_not have_link("Sign up")
+    expect(page).to_not have_link("Log in")
 
-    expect(page).to have_content("Log out")
+    expect(page).to have_link("Log out", href: destroy_user_session_path)
     expect(page).to have_content("Logged in as bob@ineedalife.com")
+
+    expect(page).to have_link("Go to my accounts", href: accounts_path)
   end
 end
