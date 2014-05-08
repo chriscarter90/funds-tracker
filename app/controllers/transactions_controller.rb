@@ -10,9 +10,9 @@ class TransactionsController < ApplicationController
     @transaction = @account.transactions.build(transaction_params)
 
     if @transaction.save
-      redirect_to account_path(@account), notice: "Transaction successfully created."
+      redirect_to account_path(@account), flash: { success: "Transaction successfully created." }
     else
-      flash[:alert] = "Transaction not created."
+      flash[:error] = "Transaction not created."
       render :new
     end
   end
@@ -23,7 +23,7 @@ class TransactionsController < ApplicationController
     begin
       @account = current_user.accounts.find(params[:account_id])
     rescue ActiveRecord::RecordNotFound => e
-      redirect_to accounts_path, alert: "Account could not be found."
+      redirect_to accounts_path, flash: { error: "Account could not be found." }
     end
   end
 

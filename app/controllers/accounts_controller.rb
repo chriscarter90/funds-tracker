@@ -18,9 +18,9 @@ class AccountsController < ApplicationController
     @account = current_user.accounts.build(account_params)
 
     if @account.save
-      redirect_to accounts_path, notice: "Account successfully created."
+      redirect_to accounts_path, flash: { success: "Account successfully created." }
     else
-      flash[:alert] = "Account not created."
+      flash[:error] = "Account not created."
       render :new
     end
   end
@@ -30,9 +30,9 @@ class AccountsController < ApplicationController
 
   def update
     if @account.update_attributes(account_params)
-      redirect_to accounts_path, notice: "Account successfully updated."
+      redirect_to accounts_path, flash: { success: "Account successfully updated." }
     else
-      flash[:alert] = "Account not updated."
+      flash[:error] = "Account not updated."
       render :edit
     end
   end
@@ -40,7 +40,7 @@ class AccountsController < ApplicationController
   def destroy
     @account.destroy
 
-    redirect_to accounts_path, notice: "Account successfully deleted."
+    redirect_to accounts_path, flash: { success: "Account successfully deleted." }
   end
 
   protected
@@ -53,7 +53,7 @@ class AccountsController < ApplicationController
     begin
       @account = current_user.accounts.find(params[:id])
     rescue ActiveRecord::RecordNotFound => e
-      redirect_to accounts_path, alert: "Account could not be found."
+      redirect_to accounts_path, flash: { error: "Account could not be found." }
     end
   end
 end

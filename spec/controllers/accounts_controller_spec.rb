@@ -130,7 +130,7 @@ describe AccountsController, "POST #create" do
       end
 
       it "should set flash" do
-        expect(flash[:notice]).to eq "Account successfully created."
+        expect(flash[:success]).to eq "Account successfully created."
       end
     end
 
@@ -150,7 +150,7 @@ describe AccountsController, "POST #create" do
       end
 
       it "should set flash" do
-        expect(flash[:alert]).to eq "Account not created."
+        expect(flash[:error]).to eq "Account not created."
       end
     end
   end
@@ -203,7 +203,7 @@ describe AccountsController, "GET #edit" do
       end
 
       it "sets flash" do
-        expect(flash[:alert]).to eq "Account could not be found."
+        expect(flash[:error]).to eq "Account could not be found."
       end
     end
   end
@@ -245,7 +245,7 @@ describe AccountsController, "PATCH #update" do
         end
 
         it "should set flash" do
-          expect(flash[:notice]).to eq "Account successfully updated."
+          expect(flash[:success]).to eq "Account successfully updated."
         end
       end
 
@@ -265,7 +265,7 @@ describe AccountsController, "PATCH #update" do
         end
 
         it "should set flash" do
-          expect(flash[:alert]).to eq "Account not updated."
+          expect(flash[:error]).to eq "Account not updated."
         end
       end
     end
@@ -286,7 +286,7 @@ describe AccountsController, "PATCH #update" do
       end
 
       it "should set flash" do
-        expect(flash[:alert]).to eq "Account could not be found."
+        expect(flash[:error]).to eq "Account could not be found."
       end
     end
   end

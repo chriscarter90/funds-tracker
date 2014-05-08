@@ -53,7 +53,7 @@ describe TransactionsController, "GET #new" do
     end
 
     it "sets flash" do
-      expect(flash[:alert]).to eq "Account could not be found."
+      expect(flash[:error]).to eq "Account could not be found."
     end
   end
 end
@@ -99,7 +99,7 @@ describe TransactionsController, "POST #create" do
       end
 
       it "sets flash" do
-        expect(flash[:notice]).to eq "Transaction successfully created."
+        expect(flash[:success]).to eq "Transaction successfully created."
       end
     end
 
@@ -119,7 +119,7 @@ describe TransactionsController, "POST #create" do
       end
 
       it "sets flash" do
-        expect(flash[:alert]).to eq "Transaction not created."
+        expect(flash[:error]).to eq "Transaction not created."
       end
     end
   end
@@ -142,7 +142,7 @@ describe TransactionsController, "POST #create" do
     end
 
     it "sets flash" do
-      expect(flash[:alert]).to eq "Account could not be found."
+      expect(flash[:error]).to eq "Account could not be found."
     end
   end
 end
