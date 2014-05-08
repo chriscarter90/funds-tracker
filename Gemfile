@@ -5,6 +5,7 @@ ruby '2.0.0', patchlevel: '247'
 gem 'rails'
 gem 'pg'
 
+gem 'bootstrap-sass'
 gem 'sass-rails', '~> 4.0.0'
 gem 'uglifier', '>= 1.3.0'
 gem 'jquery-rails'
@@ -12,10 +13,6 @@ gem 'jquery-rails'
 gem 'foreman', require: false
 gem 'devise'
 
-gem 'normalize-rails'
-gem 'bourbon'
-gem 'neat'
-gem 'bitters'
 gem 'tabnav', github: 'unboxed/tabnav', branch: 'add-ul-styling'
 
 gem 'simple_form'

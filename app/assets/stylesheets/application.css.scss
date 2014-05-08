@@ -9,11 +9,7 @@
  * compiled file, but it's generally better to create a new file per style scope.
  *
  *= require_self
- *= require normalize-rails
  */
 
-@import "bourbon";
-@import "bitters/bitters";
-@import "grid_settings";
-@import "neat";
+@import "bootstrap";
 @import "main";
