@@ -270,7 +270,7 @@ describe AccountsController, "PATCH #update" do
       end
     end
 
-    context "udpating someone elses account" do
+    context "updating someone elses account" do
       before do
         @account = FactoryGirl.create(:account, name: "Another Account")
 

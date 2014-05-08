@@ -1,0 +1,9 @@
+<h3>New Transaction</h3>
+
+<%= simple_form_for [@account, @transaction] do |f| %>
+  <%= f.input :description %>
+
+  <%= f.input :amount %>
+
+  <%= f.button :submit %>
+<% end %>

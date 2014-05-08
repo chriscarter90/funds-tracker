@@ -1,6 +1,8 @@
 <h3><%= @account.name %></h3>
 <h4>Transactions</h4>
 
+<%= link_to "Add Transaction", new_account_transaction_path(@account) %>
+
 <ul>
   <% @transactions.each do |t| %>
     <li>
