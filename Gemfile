@@ -16,6 +16,7 @@ gem 'devise'
 gem 'tabnav', github: 'unboxed/tabnav', branch: 'add-ul-styling'
 
 gem 'simple_form'
+gem 'simplecov'
 gem 'rails-i18n'
 
 group :test do
