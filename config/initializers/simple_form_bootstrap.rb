@@ -63,9 +63,9 @@ SimpleForm.setup do |config|
   config.wrappers :horizontal_file_input, tag: 'div', class: 'form-group', error_class: 'has-error' do |b|
     b.use :html5
     b.use :placeholder
-    b.use :label, class: 'col-sm-3 control-label'
+    b.use :label, class: 'col-md-2 control-label'
 
-    b.wrapper tag: 'div', class: 'col-sm-9' do |ba|
+    b.wrapper tag: 'div', class: 'col-md-10' do |ba|
       ba.use :input
       ba.use :error, wrap_with: { tag: 'span', class: 'help-block' }
       ba.use :hint,  wrap_with: { tag: 'p', class: 'help-block' }
@@ -76,9 +76,9 @@ SimpleForm.setup do |config|
     b.use :html5
     b.use :placeholder
 
-    b.wrapper tag: 'div', class: 'col-sm-offset-3 col-sm-9' do |wr|
+    b.wrapper tag: 'div', class: 'col-md-offset-2 col-md-10' do |wr|
       wr.wrapper tag: 'div', class: 'checkbox' do |ba|
-        ba.use :label_input, class: 'col-sm-9'
+        ba.use :label_input, class: 'col-md-10'
       end
 
       wr.use :error, wrap_with: { tag: 'span', class: 'help-block' }
@@ -90,7 +90,7 @@ SimpleForm.setup do |config|
     b.use :html5
     b.use :placeholder
 
-    b.use :label, class: 'col-sm-3 control-label'
+    b.use :label, class: 'col-md-2 control-label'
 
     b.wrapper tag: 'div', class: 'col-sm-9' do |ba|
       ba.use :input

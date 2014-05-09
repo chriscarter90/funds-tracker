@@ -1,17 +1,33 @@
-<h2>Sign in</h2>
+<div class="row header-block">
+  <div class="col-md-9">
+    <h3>Sign in</h3>
+  </div>
+</div>
 
-<%= form_for(resource, :as => resource_name, :url => session_path(resource_name)) do |f| %>
-  <div><%= f.label :email %><br />
-  <%= f.email_field :email, :autofocus => true %></div>
+<div class="row">
+  <%= simple_form_for resource, as: resource_name, url: session_path(resource_name), html: { class: 'form-horizontal', role: "form" },
+    wrapper: :horizontal_form,
+    wrapper_mappings: {
+      check_boxes: :horizontal_radio_and_checkboxes,
+      radio_buttons: :horizontal_radio_and_checkboxes,
+      file: :horizontal_file_input,
+      boolean: :horizontal_boolean
+    } do |f| %>
 
-  <div><%= f.label :password %><br />
-  <%= f.password_field :password %></div>
+    <%= f.input :email, :autofocus => true %>
 
-  <% if devise_mapping.rememberable? -%>
-    <div><%= f.check_box :remember_me %> <%= f.label :remember_me %></div>
-  <% end -%>
+    <%= f.input :password %>
 
-  <div><%= f.submit "Sign in" %></div>
-<% end %>
+    <% if devise_mapping.rememberable? -%>
+      <%= f.input :remember_me, as: :boolean %>
+    <% end -%>
 
-<%= render "users/shared/links" %>
+    <div class="form-group">
+      <div class="col-md-offset-2 col-md-10">
+        <%= f.submit "Sign in", class: "btn btn-primary" %>
+
+        <%= render "users/shared/links" %>
+      </div>
+    </div>
+  <% end %>
+</div>
