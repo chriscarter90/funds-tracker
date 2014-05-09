@@ -14,6 +14,16 @@ feature "Transactions", %q{
 
       expect(page).to have_content("You need to sign in or sign up before continuing.")
     end
+
+    scenario "Trying to add a transaction to an account" do
+      account = FactoryGirl.create(:account)
+
+      visit new_account_transaction_path(account)
+
+      expect(current_path).to eq new_user_session_path
+
+      expect(page).to have_content("You need to sign in or sign up before continuing.")
+    end
   end
 
   context "As a logged in user" do
@@ -99,6 +109,16 @@ feature "Transactions", %q{
                                  FactoryGirl.create(:transaction, description: "Another Transaction", amount: 12.34)]
 
         visit account_path(account)
+
+        expect(current_path).to eq accounts_path
+
+        expect(page).to have_content("Account could not be found.")
+      end
+
+      scenario "Trying to add a transaction" do
+        account = FactoryGirl.create(:account)
+
+        visit new_account_transaction_path(account)
 
         expect(current_path).to eq accounts_path
 
