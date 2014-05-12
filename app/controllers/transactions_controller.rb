@@ -1,7 +1,7 @@
 class TransactionsController < ApplicationController
   before_action :authenticate_user!
   before_action :find_account
-  before_action :find_transaction, only: [:edit, :update]
+  before_action :find_transaction, only: [:edit, :update, :destroy]
 
   def new
     @transaction = @account.transactions.build
@@ -28,6 +28,12 @@ class TransactionsController < ApplicationController
       flash[:error] = "Transaction not updated."
       render :edit
     end
+  end
+
+  def destroy
+    @transaction.destroy
+
+    redirect_to account_path(@account), flash: { success: "Transaction successfully deleted." }
   end
 
   protected

@@ -295,3 +295,69 @@ describe TransactionsController, "PATCH #update" do
     end
   end
 end
+
+describe TransactionsController, "DELETE #destroy" do
+  context "As a non-logged in user" do
+    before do
+      account = FactoryGirl.create(:account)
+      transaction = FactoryGirl.create(:transaction, account: account)
+
+      delete :destroy, account_id: account, id: transaction
+    end
+
+    it "redirects to the login page" do
+      expect(response).to redirect_to new_user_session_path
+    end
+  end
+
+  context "As a logged in user" do
+    before do
+      @user = FactoryGirl.create(:user)
+      sign_in @user
+    end
+
+    context "deleting a transaction on their account" do
+      before do
+        @account = FactoryGirl.create(:account, user: @user)
+        transaction = FactoryGirl.create(:transaction, account: @account)
+
+        delete :destroy, account_id: @account, id: transaction
+      end
+
+      it "should delete the transaction" do
+        expect(@account.transactions.count).to eq 0
+        expect(@account.transactions.last).to be_nil
+      end
+
+      it "should redirect back to the account" do
+        expect(response).to redirect_to account_path(@account)
+      end
+
+      it "should set flash" do
+        expect(flash[:success]).to eq "Transaction successfully deleted."
+      end
+    end
+
+    context "deleting a transaction on someone else's account" do
+      before do
+        @account = FactoryGirl.create(:account)
+        @transaction = FactoryGirl.create(:transaction, account: @account)
+
+        delete :destroy, account_id: @account, id: @transaction
+      end
+
+      it "should not delete the transaction" do
+        expect(@account.transactions.count).to eq 1
+        expect(@account.transactions.last).to eq @transaction
+      end
+
+      it "should redirect back to the accounts page" do
+        expect(response).to redirect_to(accounts_path)
+      end
+
+      it "should set flash" do
+        expect(flash[:error]).to eq "Account could not be found."
+      end
+    end
+  end
+end

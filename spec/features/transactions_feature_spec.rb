@@ -141,6 +141,21 @@ feature "Transactions", %q{
         expect(page).to have_content("Transaction successfully updated.")
         expect(page).to have_content("Edited Transaction - £58.65")
       end
+
+      scenario "Deleting a transaction" do
+        transaction = FactoryGirl.create(:transaction, description: "Old Transaction", amount: 34, account: @account)
+
+        visit account_path(@account)
+
+        expect(page).to have_content("Old Transaction - £34.00")
+        expect(page).to have_link("Delete")
+        click_link "Delete"
+
+        expect(current_path).to eq account_path(@account)
+        expect(page).to_not have_content("Old Transaction - £34.00")
+
+        expect(page).to have_content("Transaction successfully deleted.")
+      end
     end
 
     context "without access" do
