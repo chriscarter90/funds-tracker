@@ -13,4 +13,8 @@ module ApplicationHelper
       bootstrap_class_for(flash_type.to_s)
     end
   end
+
+  def as_currency(number)
+    number_to_currency(number)
+  end
 end

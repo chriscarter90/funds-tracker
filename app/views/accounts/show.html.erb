@@ -18,13 +18,21 @@
           <th>Amount</th>
           <th>Actions</th>
         </tr>
+        <tr>
+          <td>
+            <strong>Starting balance</strong>
+          </td>
+          <td>
+            <strong><%= as_currency(@account.starting_balance) %></strong>
+          </td>
+          <td></td>
         <% @transactions.each do |t| %>
           <tr>
             <td>
               <%= t.description %>
             </td>
             <td>
-              <%= transaction_amount(t) %>
+              <%= as_currency(t.amount) %>
             </td>
             <td>
               <%= link_to "Edit", edit_account_transaction_path(@account, t), class: "btn btn-warning" %>

@@ -43,7 +43,7 @@ feature "Transactions", %q{
 
     context "with access" do
       before do
-        @account = FactoryGirl.create(:account, name: "My Account", user: @user)
+        @account = FactoryGirl.create(:account, name: "My Account", starting_balance: 123.45, user: @user)
       end
 
       scenario "Viewing transactions for an account" do
@@ -58,6 +58,9 @@ feature "Transactions", %q{
 
         expect(page).to have_content("My Account")
         expect(page).to have_content("Transactions")
+
+        expect(page).to have_content("Starting balance")
+        expect(page).to have_content("£123.45")
 
         expect(page).to have_content("Example Transaction")
         expect(page).to have_content("Another Transaction")
