@@ -68,14 +68,19 @@ feature "Accounts", %q{
       expect(page).to have_content("New Account")
 
       expect(page).to have_field("Name")
+      expect(page).to have_field("Starting balance")
       click_button "Create Account"
 
       expect(page).to have_content("Account not created.")
       within ".account_name" do
         expect(page).to have_content("can't be blank")
       end
+      within ".account_starting_balance" do
+        expect(page).to have_content("can't be blank")
+      end
 
       fill_in "Name", with: "My First Account"
+      fill_in "Starting balance", with: 250
       click_button "Create Account"
 
       expect(current_path).to eq accounts_path
@@ -85,7 +90,7 @@ feature "Accounts", %q{
 
     context "editing an account" do
       scenario "as the user whose account it is" do
-        account = FactoryGirl.create(:account, name: "Original Account", user: @user)
+        account = FactoryGirl.create(:account, name: "Original Account", starting_balance: 250, user: @user)
 
         visit accounts_path
 
@@ -95,6 +100,7 @@ feature "Accounts", %q{
 
         expect(page).to have_content("Edit Account")
         expect(page).to have_field("Name", with: "Original Account")
+        expect(page).to have_field("Starting balance", with: "250.00")
         fill_in "Name", with: ""
         click_button "Update Account"
 

@@ -9,6 +9,7 @@ FactoryGirl.define do
 
   factory :account do
     name { Faker::Lorem.words(3).join(" ") }
+    starting_balance { 1 + (rand(899)/100) }
     user
   end
 

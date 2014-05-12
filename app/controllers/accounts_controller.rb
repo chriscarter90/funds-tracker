@@ -46,7 +46,7 @@ class AccountsController < ApplicationController
   protected
 
   def account_params
-    params.required(:account).permit(:name)
+    params.required(:account).permit(:name, :starting_balance)
   end
 
   def find_account
