@@ -1,5 +1,13 @@
-<% if current_user.present? %>
-  <%= link_to "Go to my accounts", accounts_path %>
-<% end %>
+<div class="jumbotron">
+  <h1>FundsTracker</h1>
+  <p>So I heard you wanted to keep track of your funds?</p>
+  <% if current_user.present? %>
+    <%= link_to "Take me to my accounts!", accounts_path, class: "btn btn-primary btn-lg" %>
+  <% else %>
+    <p>Want in?</p>
+    <%= link_to "Why not sign up?", new_user_registration_path, class: "btn btn-primary btn-lg" %>
 
-Testing!
+    <p>Already in?</p>
+    <%= link_to "Log me in!", new_user_session_path, class: "btn btn-primary btn-lg" %>
+  <% end %>
+</div>
