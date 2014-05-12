@@ -99,6 +99,22 @@ SimpleForm.setup do |config|
     end
   end
 
+  config.wrappers :horizontal_input_with_text, tag: 'div', class: 'form-group', error_class: 'has-error' do |b|
+    b.use :html5
+    b.use :placeholder
+    b.use :label, class: 'col-md-2 control-label'
+
+    b.wrapper tag: 'div', class: 'col-md-6' do |wr|
+      wr.wrapper tag: 'div', class: 'input-group' do |ba|
+        ba.use :input_group_text
+        ba.use :input
+      end
+
+      wr.use :error, wrap_with: { tag: 'span', class: 'help-block' }
+      wr.use :hint,  wrap_with: { tag: 'p', class: 'help-block' }
+    end
+  end
+
   # Wrappers for forms and inputs using the Bootstrap toolkit.
   # Check the Bootstrap docs (http://getbootstrap.com)
   # to learn about the different styles for forms and inputs,
