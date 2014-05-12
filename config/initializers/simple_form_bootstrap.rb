@@ -104,7 +104,7 @@ SimpleForm.setup do |config|
     b.use :placeholder
     b.use :label, class: 'col-md-2 control-label'
 
-    b.wrapper tag: 'div', class: 'col-md-6' do |wr|
+    b.wrapper tag: 'div', class: 'col-md-2' do |wr|
       wr.wrapper tag: 'div', class: 'input-group' do |ba|
         ba.use :input_group_text
         ba.use :input
