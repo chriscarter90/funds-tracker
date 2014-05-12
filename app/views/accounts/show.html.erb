@@ -16,6 +16,7 @@
         <% @transactions.each do |t| %>
           <li>
             <%= t.description %> - <%= transaction_amount(t) %>
+            <%= link_to "Edit", edit_account_transaction_path(@account, t) %>
           </li>
         <% end %>
       </ul>

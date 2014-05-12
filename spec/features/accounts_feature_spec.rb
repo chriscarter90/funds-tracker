@@ -94,7 +94,7 @@ feature "Accounts", %q{
         click_link("Edit")
 
         expect(page).to have_content("Edit Account")
-        expect(page).to have_field("Name")
+        expect(page).to have_field("Name", with: "Original Account")
         fill_in "Name", with: ""
         click_button "Update Account"
 

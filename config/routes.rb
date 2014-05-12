@@ -4,6 +4,6 @@ FundsTracker::Application.routes.draw do
   devise_for :users
 
   resources :accounts do
-    resources :transactions, only: [:new, :create]
+    resources :transactions, except: [:show, :destroy]
   end
 end

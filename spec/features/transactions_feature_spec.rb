@@ -5,10 +5,11 @@ feature "Transactions", %q{
 } do
 
   context "As a non-logged in user" do
+    before do
+      @account = FactoryGirl.create(:account)
+    end
     scenario "Trying to view transactions for an account" do
-      account = FactoryGirl.create(:account)
-
-      visit account_path(account)
+      visit account_path(@account)
 
       expect(current_path).to eq new_user_session_path
 
@@ -16,9 +17,17 @@ feature "Transactions", %q{
     end
 
     scenario "Trying to add a transaction to an account" do
-      account = FactoryGirl.create(:account)
+      visit new_account_transaction_path(@account)
 
-      visit new_account_transaction_path(account)
+      expect(current_path).to eq new_user_session_path
+
+      expect(page).to have_content("You need to sign in or sign up before continuing.")
+    end
+
+    scenario "Trying to edit an existing transaction" do
+      transaction = FactoryGirl.create(:transaction, account: @account)
+
+      visit edit_account_transaction_path(@account, transaction)
 
       expect(current_path).to eq new_user_session_path
 
@@ -100,15 +109,49 @@ feature "Transactions", %q{
         expect(page).to have_content("My Account")
         expect(page).to have_content("An Example Transaction")
       end
+
+      scenario "Editing an existing transaction" do
+        transaction = FactoryGirl.create(:transaction, description: "A Transaction", amount: 24, account: @account)
+
+        visit edit_account_transaction_path(@account, transaction)
+
+        visit account_path(@account)
+
+        expect(page).to have_content("A Transaction - £24.00")
+        expect(page).to have_link("Edit")
+        click_link "Edit"
+
+        expect(current_path).to eq edit_account_transaction_path(@account, transaction)
+
+        expect(page).to have_content("Edit Transaction")
+        expect(page).to have_field("Description", with: "A Transaction")
+        expect(page).to have_field("Amount", with: "24.0")
+
+        fill_in "Description", with: ""
+        click_button "Update Transaction"
+
+        expect(page).to have_content("Transaction not updated.")
+        within ".transaction_description" do
+          expect(page).to have_content("can't be blank")
+        end
+
+        fill_in "Description", with: "Edited Transaction"
+        fill_in "Amount", with: 58.65
+        click_button "Update Transaction"
+
+        expect(current_path).to eq account_path(@account)
+        expect(page).to have_content("Transaction successfully updated.")
+        expect(page).to have_content("Edited Transaction - £58.65")
+      end
     end
 
     context "without access" do
-      scenario "Trying to view transactions" do
-        account = FactoryGirl.create(:account)
-        account.transactions << [FactoryGirl.create(:transaction, description: "Example Transaction", amount: 30.48),
-                                 FactoryGirl.create(:transaction, description: "Another Transaction", amount: 12.34)]
+      before do
+        @account = FactoryGirl.create(:account)
+      end
 
-        visit account_path(account)
+      scenario "Trying to view transactions" do
+        visit account_path(@account)
 
         expect(current_path).to eq accounts_path
 
@@ -116,9 +159,17 @@ feature "Transactions", %q{
       end
 
       scenario "Trying to add a transaction" do
-        account = FactoryGirl.create(:account)
+        visit new_account_transaction_path(@account)
 
-        visit new_account_transaction_path(account)
+        expect(current_path).to eq accounts_path
+
+        expect(page).to have_content("Account could not be found.")
+      end
+
+      scenario "Trying to edit a transaction" do
+        transaction = FactoryGirl.create(:transaction, account: @account)
+
+        visit edit_account_transaction_path(@account, transaction)
 
         expect(current_path).to eq accounts_path
 

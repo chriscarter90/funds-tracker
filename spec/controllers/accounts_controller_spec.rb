@@ -229,10 +229,12 @@ describe AccountsController, "PATCH #update" do
     end
 
     context "updating an account which is theirs" do
+      before do
+        @account = FactoryGirl.create(:account, name: "An Account", user: @user)
+      end
+
       context "with valid params" do
         before do
-          @account = FactoryGirl.create(:account, name: "An Account", user: @user)
-
           patch :update, id: @account, account: { name: "New Account Name" }
         end
 
@@ -251,8 +253,6 @@ describe AccountsController, "PATCH #update" do
 
       context "with invalid params" do
         before do
-          @account = FactoryGirl.create(:account, name: "An Account", user: @user)
-
           patch :update, id: @account, account: { name: "" }
         end
 
@@ -260,7 +260,7 @@ describe AccountsController, "PATCH #update" do
           expect(@account.reload.name).to eq "An Account"
         end
 
-        it "should render new" do
+        it "should render edit" do
           expect(response).to render_template :edit
         end
 

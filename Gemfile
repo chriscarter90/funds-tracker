@@ -13,6 +13,8 @@ gem 'jquery-rails'
 gem 'foreman', require: false
 gem 'devise'
 
+gem 'launchy'
+
 gem 'tabnav', github: 'unboxed/tabnav', branch: 'add-ul-styling'
 
 gem 'simple_form', '~> 3.1.0.rc1'
