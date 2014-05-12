@@ -37,6 +37,10 @@ group :test, :development do
   gem 'faker'
 end
 
+group :production do
+  gem 'rails_12factor'
+end
+
 # Use debugger
 gem 'pry', group: [:development, :test]
 gem 'pry-debugger', group: [:development, :test]
