@@ -21,6 +21,8 @@ gem 'simple_form', '~> 3.1.0.rc1'
 gem 'simplecov'
 gem 'rails-i18n'
 
+gem 'dotenv-rails'
+
 group :test do
   gem 'database_cleaner'
   gem 'fuubar'
