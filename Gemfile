@@ -28,6 +28,7 @@ group :test do
   gem 'fuubar'
   gem 'poltergeist'
   gem 'shoulda-matchers'
+  gem "codeclimate-test-reporter", require: false
 end
 
 group :test, :development do
