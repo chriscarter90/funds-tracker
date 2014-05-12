@@ -113,8 +113,6 @@ feature "Transactions", %q{
       scenario "Editing an existing transaction" do
         transaction = FactoryGirl.create(:transaction, description: "A Transaction", amount: 24, account: @account)
 
-        visit edit_account_transaction_path(@account, transaction)
-
         visit account_path(@account)
 
         expect(page).to have_content("A Transaction - £24.00")
