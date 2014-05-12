@@ -9,7 +9,7 @@
 
   <%= f.input :description, placeholder: "Description", autofocus: true %>
 
-  <%= f.input :amount, placeholder: "Amount" %>
+  <%= f.input :amount, placeholder: "Amount", as: :currency, input_html: { value: number_with_precision(f.object.amount, precision: 2) } %>
 
   <div class="form-group">
     <div class="col-md-offset-2 col-md-10">

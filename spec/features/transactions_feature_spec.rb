@@ -115,7 +115,9 @@ feature "Transactions", %q{
 
         visit account_path(@account)
 
-        expect(page).to have_content("A Transaction - £24.00")
+        expect(page).to have_content("A Transaction")
+        expect(page).to have_content("£24.00")
+
         expect(page).to have_link("Edit")
         click_link "Edit"
 
@@ -123,7 +125,7 @@ feature "Transactions", %q{
 
         expect(page).to have_content("Edit Transaction")
         expect(page).to have_field("Description", with: "A Transaction")
-        expect(page).to have_field("Amount", with: "24.0")
+        expect(page).to have_field("Amount", with: "24.00")
 
         fill_in "Description", with: ""
         click_button "Update Transaction"
@@ -139,7 +141,8 @@ feature "Transactions", %q{
 
         expect(current_path).to eq account_path(@account)
         expect(page).to have_content("Transaction successfully updated.")
-        expect(page).to have_content("Edited Transaction - £58.65")
+        expect(page).to have_content("Edited Transaction")
+        expect(page).to have_content("£58.65")
       end
 
       scenario "Deleting a transaction" do
@@ -147,12 +150,14 @@ feature "Transactions", %q{
 
         visit account_path(@account)
 
-        expect(page).to have_content("Old Transaction - £34.00")
+        expect(page).to have_content("Old Transaction")
+        expect(page).to have_content("£34.00")
         expect(page).to have_link("Delete")
         click_link "Delete"
 
         expect(current_path).to eq account_path(@account)
-        expect(page).to_not have_content("Old Transaction - £34.00")
+        expect(page).to_not have_content("Old Transaction")
+        expect(page).to_not have_content("£34.00")
 
         expect(page).to have_content("Transaction successfully deleted.")
       end
