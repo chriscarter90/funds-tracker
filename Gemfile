@@ -36,12 +36,10 @@ group :test, :development do
   gem 'rspec-rails'
   gem 'capybara'
   gem 'faker'
+  gem 'pry'
+  gem 'pry-debugger'
 end
 
 group :production do
   gem 'rails_12factor'
 end
-
-# Use debugger
-gem 'pry', group: [:development, :test]
-gem 'pry-debugger', group: [:development, :test]
