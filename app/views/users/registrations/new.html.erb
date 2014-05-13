@@ -14,11 +14,15 @@
       boolean: :horizontal_boolean
     } do |f| %>
 
-    <%= f.input :email, autofocus: true %>
+    <%= f.input :first_name, autofocus: true %>
 
-    <%= f.input :password %>
+    <%= f.input :last_name %>
 
-    <%= f.input :password_confirmation %>
+    <%= f.input :email, required: true %>
+
+    <%= f.input :password, required: true %>
+
+    <%= f.input :password_confirmation, required: true %>
 
     <div class="form-group">
       <div class="col-md-offset-2 col-md-10">
