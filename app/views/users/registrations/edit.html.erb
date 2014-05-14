@@ -18,17 +18,17 @@
       <div>Currently waiting confirmation for: <%= resource.unconfirmed_email %></div>
     <% end %>
 
-    <%= f.input :first_name, autofocus: true %>
+    <%= f.input :first_name, placeholder: "First name", autofocus: true %>
 
-    <%= f.input :last_name %>
+    <%= f.input :last_name, placeholder: "Last name" %>
 
-    <%= f.input :email, required: true %>
+    <%= f.input :email, placeholder: "Email", required: true %>
 
-    <%= f.input :password, required: true, hint: "(leave blank if you don't want to change it)" %>
+    <%= f.input :password, placeholer: "Password", required: true, hint: "(leave blank if you don't want to change it)" %>
 
-    <%= f.input :password_confirmation, required: true %>
+    <%= f.input :password_confirmation, placeholer: "Confirm password", required: true %>
 
-    <%= f.input :current_password, hint: "(we need your current password to confirm your changes)" %>
+    <%= f.input :current_password, placeholder: "Current password", hint: "(we need your current password to confirm your changes)" %>
 
     <div class="form-group">
       <div class="col-md-offset-2 col-md-10">

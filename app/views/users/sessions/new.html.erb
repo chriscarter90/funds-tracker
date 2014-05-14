@@ -14,9 +14,9 @@
       boolean: :horizontal_boolean
     } do |f| %>
 
-    <%= f.input :email, autofocus: true %>
+    <%= f.input :email, placeholder: "Email", autofocus: true %>
 
-    <%= f.input :password %>
+    <%= f.input :password, placeholder: "Password" %>
 
     <% if devise_mapping.rememberable? -%>
       <%= f.input :remember_me, as: :boolean %>
