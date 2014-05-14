@@ -4,4 +4,6 @@ class Transaction < ActiveRecord::Base
 
   belongs_to :account
 
+  scope :oldest_first, -> { order(:created_at) }
+
 end

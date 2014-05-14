@@ -46,7 +46,9 @@ describe AccountsController, "GET #show" do
       sign_in user
 
       @account = FactoryGirl.create(:account, user: user)
-      @account.transactions << FactoryGirl.create_list(:transaction, 3, account: @account)
+      @account.transactions << [FactoryGirl.create(:transaction, description: "Transaction #1", created_at: 5.days.ago),
+                                FactoryGirl.create(:transaction, description: "Transaction #3", created_at: 5.minutes.ago),
+                                FactoryGirl.create(:transaction, description: "Transaction #2", created_at: 5.hours.ago)]
 
       get :show, id: @account
     end
@@ -57,6 +59,7 @@ describe AccountsController, "GET #show" do
 
     it "assigns the transactions" do
       expect(assigns(:transactions).size).to eq 3
+      expect(assigns(:transactions).map(&:description)).to eq ["Transaction #1", "Transaction #2", "Transaction #3"]
     end
 
     it "renders show" do

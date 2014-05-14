@@ -7,7 +7,7 @@ class AccountsController < ApplicationController
   end
 
   def show
-    @transactions = @account.transactions
+    @transactions = @account.transactions.oldest_first
   end
 
   def new

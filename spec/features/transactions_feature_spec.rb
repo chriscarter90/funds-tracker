@@ -63,8 +63,8 @@ feature "Transactions", %q{
 
         expect(page).to have_table_rows_in_order(
           ["Starting balance", "£123.45", ""],
-          ["Another Transaction", "£12.34", "Edit Delete"],
-          ["Example Transaction", "£30.48", "Edit Delete"]
+          ["Example Transaction", "£30.48", "Edit Delete"],
+          ["Another Transaction", "£12.34", "Edit Delete"]
         )
       end
 
