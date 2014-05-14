@@ -19,6 +19,9 @@
             </p>
           </li>
           <li>
+            <%= link_to "Edit my details", edit_user_registration_path %>
+          </li>
+          <li>
             <%= link_to "Log out", destroy_user_session_path, method: :delete %>
           </li>
         <% else %>
