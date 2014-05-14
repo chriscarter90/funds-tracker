@@ -48,14 +48,19 @@ feature "Accounts", %q{
     end
 
     scenario "Viewing your accounts" do
-      @user.accounts << FactoryGirl.create(:account, name: "Account #1") << FactoryGirl.create(:account, name: "Account #2")
+      @user.accounts << FactoryGirl.create(:account, name: "Account #1")
+      @user.accounts << FactoryGirl.create(:account, name: "Account #2")
 
       visit accounts_path
 
       expect(page).to have_content("Accounts")
 
-      expect(page).to have_content("Account #1")
-      expect(page).to have_content("Account #2")
+      expect(page).to have_table_columns(["Name", "Actions"])
+
+      expect(page).to have_table_rows_in_order(
+        ["Account #2", "Edit Delete"],
+        ["Account #1", "Edit Delete"]
+      )
     end
 
     scenario "Creating a new account" do
@@ -85,7 +90,10 @@ feature "Accounts", %q{
 
       expect(current_path).to eq accounts_path
       expect(page).to have_content("Account successfully created.")
-      expect(page).to have_content("My First Account")
+
+      expect(page).to have_table_rows_in_order(
+        ["My First Account", "Edit Delete"]
+      )
     end
 
     context "editing an account" do
@@ -94,7 +102,10 @@ feature "Accounts", %q{
 
         visit accounts_path
 
-        expect(page).to have_content("Original Account")
+        expect(page).to have_table_rows_in_order(
+          ["Original Account", "Edit Delete"]
+        )
+
         expect(page).to have_link("Edit")
         click_link("Edit")
 
@@ -114,7 +125,10 @@ feature "Accounts", %q{
 
         expect(current_path).to eq accounts_path
         expect(page).to have_content("Account successfully updated.")
-        expect(page).to have_content("Edited Account")
+
+        expect(page).to have_table_rows_in_order(
+          ["Edited Account", "Edit Delete"]
+        )
       end
 
       scenario "as a different user" do

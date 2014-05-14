@@ -44,6 +44,7 @@ RSpec.configure do |config|
   config.use_transactional_fixtures = false
 
   config.include Devise::TestHelpers, :type => :controller
+  config.include CapybaraTableMatchers, :type => :feature
 
   # If true, the base class of anonymous controllers will be inferred
   # automatically. This will be the default behavior in future versions of

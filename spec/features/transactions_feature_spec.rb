@@ -47,8 +47,8 @@ feature "Transactions", %q{
       end
 
       scenario "Viewing transactions for an account" do
-        @account.transactions << [FactoryGirl.create(:transaction, description: "Example Transaction", amount: 30.48),
-                                 FactoryGirl.create(:transaction, description: "Another Transaction", amount: 12.34)]
+        @account.transactions << FactoryGirl.create(:transaction, description: "Example Transaction", amount: 30.48)
+        @account.transactions << FactoryGirl.create(:transaction, description: "Another Transaction", amount: 12.34)
 
         visit accounts_path
 
@@ -59,14 +59,13 @@ feature "Transactions", %q{
         expect(page).to have_content("My Account")
         expect(page).to have_content("Transactions")
 
-        expect(page).to have_content("Starting balance")
-        expect(page).to have_content("£123.45")
+        expect(page).to have_table_columns(["Description", "Amount", "Actions"])
 
-        expect(page).to have_content("Example Transaction")
-        expect(page).to have_content("Another Transaction")
-
-        expect(page).to have_content("£30.48")
-        expect(page).to have_content("£12.34")
+        expect(page).to have_table_rows_in_order(
+          ["Starting balance", "£123.45", ""],
+          ["Another Transaction", "£12.34", "Edit Delete"],
+          ["Example Transaction", "£30.48", "Edit Delete"]
+        )
       end
 
       scenario "Viewing an empty list of transactions" do
@@ -110,7 +109,12 @@ feature "Transactions", %q{
         expect(current_path).to eq account_path(@account)
         expect(page).to have_content("Transaction successfully created.")
         expect(page).to have_content("My Account")
-        expect(page).to have_content("An Example Transaction")
+        expect(page).to have_content("Transactions")
+
+        expect(page).to have_table_rows_in_order(
+          ["Starting balance", "£123.45", ""],
+          ["An Example Transaction", "£20.11", "Edit Delete"]
+        )
       end
 
       scenario "Editing an existing transaction" do
@@ -144,8 +148,11 @@ feature "Transactions", %q{
 
         expect(current_path).to eq account_path(@account)
         expect(page).to have_content("Transaction successfully updated.")
-        expect(page).to have_content("Edited Transaction")
-        expect(page).to have_content("£58.65")
+
+        expect(page).to have_table_rows_in_order(
+          ["Starting balance", "£123.45", ""],
+          ["Edited Transaction", "£58.65", "Edit Delete"]
+        )
       end
 
       scenario "Deleting a transaction" do
