@@ -32,14 +32,26 @@
 
     <div class="form-group">
       <div class="col-md-offset-2 col-md-10">
-        <%= f.submit "Update", class: "btn btn-primary" %></div>
+        <%= f.submit "Update", class: "btn btn-primary" %>
       </div>
     </div>
   <% end %>
+</div>
 
+<div class="row">
   <h3>Cancel my account</h3>
 
-  <p>Unhappy? <%= button_to "Cancel my account", registration_path(resource_name), :data => { :confirm => "Are you sure?" }, :method => :delete %></p>
+  <form class="simple_form form-horizontal">
+    <div class="col-md-offset-2 col-md-10">
+      <div class="form-group">
+        <p class="form-control-static">Unhappy?</p>
+      </div>
+    </div>
 
-  <%= link_to "Back", :back %>
+    <div class="form-group">
+      <div class="col-md-offset-2 col-md-10">
+        <%= link_to "Cancel my account", registration_path(resource_name), :data => { :confirm => "Are you sure?" }, :method => :delete, class: "btn btn-danger" %>
+      </div>
+    </div>
+  </form>
 </div>
