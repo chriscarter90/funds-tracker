@@ -15,6 +15,7 @@
       <table class="table">
         <thead>
           <tr>
+            <th>Transaction date</th>
             <th>Description</th>
             <th>Amount</th>
             <th>Running total</th>
@@ -23,6 +24,7 @@
         </thead>
         <tbody>
           <tr>
+            <td></td>
             <td>
               <strong>Starting balance</strong>
             </td>
@@ -34,6 +36,9 @@
           </tr>
           <% @transactions.inject(@account.starting_balance) do |total, transaction| %>
             <tr>
+              <td>
+                <%= format_date(transaction.transaction_date, :longer) %>
+              </td>
               <td>
                 <%= transaction.description %>
               </td>
@@ -51,6 +56,7 @@
             <%- total + transaction.amount %>
           <% end %>
           <tr>
+            <td></td>
             <td>
               <strong>Current balance</strong>
             </td>

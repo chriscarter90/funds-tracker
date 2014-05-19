@@ -17,4 +17,9 @@ module ApplicationHelper
   def as_currency(number)
     number_to_currency(number)
   end
+
+  def format_date(date, format)
+    unformatted = date || Date.today
+    unformatted.to_date.to_s(format)
+  end
 end

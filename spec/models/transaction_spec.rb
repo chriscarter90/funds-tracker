@@ -4,6 +4,12 @@ describe Transaction, "validations" do
   it { should validate_presence_of :description }
   it { should validate_presence_of :amount }
   it { should validate_presence_of :account }
+  it { should validate_presence_of :transaction_date }
+  it { should_not allow_value(2.days.from_now).for(:transaction_date) }
+  it { should_not allow_value(2.weeks.from_now).for(:transaction_date) }
+  it { should allow_value(Date.today).for(:transaction_date) }
+  it { should allow_value(2.days.ago).for(:transaction_date) }
+  it { should allow_value(2.weeks.ago).for(:transaction_date) }
 end
 
 describe Transaction, "relationships" do
@@ -11,13 +17,13 @@ describe Transaction, "relationships" do
 end
 
 describe Transaction, "scopes" do
-  describe ".oldest_first" do
-    it "should return them with the oldest transaction first" do
-      @t1 = FactoryGirl.create(:transaction, created_at: 4.minutes.ago)
-      @t2 = FactoryGirl.create(:transaction, created_at: 2.minutes.ago)
-      @t3 = FactoryGirl.create(:transaction, created_at: 6.minutes.ago)
+  describe ".newest_first" do
+    it "should return them with the newest transaction first" do
+      @t1 = FactoryGirl.create(:transaction, transaction_date: 4.days.ago)
+      @t2 = FactoryGirl.create(:transaction, transaction_date: 2.days.ago)
+      @t3 = FactoryGirl.create(:transaction, transaction_date: 6.days.ago)
 
-      expect(Transaction.oldest_first).to eq [@t3, @t1, @t2]
+      expect(Transaction.newest_first).to eq [@t2, @t1, @t3]
     end
   end
 end

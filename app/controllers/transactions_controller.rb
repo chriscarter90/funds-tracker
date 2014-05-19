@@ -50,6 +50,6 @@ class TransactionsController < ApplicationController
     @transaction = @account.transactions.find(params[:id])
   end
   def transaction_params
-    params.required(:transaction).permit(:description, :amount)
+    params.required(:transaction).permit(:description, :amount, :transaction_date)
   end
 end

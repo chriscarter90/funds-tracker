@@ -20,5 +20,6 @@ FactoryGirl.define do
     # Generates an amount anywhere between £1 and £9.99
     amount { 1 + (rand(899)/100) }
     account
+    transaction_date { 2.weeks.ago }
   end
 end

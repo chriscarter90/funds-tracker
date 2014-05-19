@@ -9,6 +9,7 @@ gem 'bootstrap-sass'
 gem 'sass-rails', '~> 4.0.0'
 gem 'uglifier', '>= 1.3.0'
 gem 'jquery-rails'
+gem 'jquery-ui-rails'
 
 gem 'foreman', require: false
 gem 'devise'
@@ -38,6 +39,7 @@ group :test, :development do
   gem 'faker'
   gem 'pry'
   gem 'pry-debugger'
+  gem 'timecop'
 end
 
 group :production do

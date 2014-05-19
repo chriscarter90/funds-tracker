@@ -91,5 +91,6 @@ RSpec.configure do |config|
   # Clean the database after each test.
   config.after :each do
     DatabaseCleaner.clean
+    Timecop.return # Just in case
   end
 end
