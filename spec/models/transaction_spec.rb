@@ -21,3 +21,32 @@ describe Transaction, "scopes" do
     end
   end
 end
+
+describe Transaction, "callbacks" do
+  describe 'after save' do
+    it 'should update the current balance of the parent account' do
+      account = FactoryGirl.create(:account, starting_balance: 100)
+
+      expect(account.current_balance).to eq 100
+
+      account.transactions << FactoryGirl.create(:transaction, amount: 50)
+
+      expect(account.reload.current_balance).to eq 150
+    end
+  end
+
+  describe 'after destroy' do
+    it 'should upadte the current balance of the parent account' do
+      account = FactoryGirl.create(:account, starting_balance: 100)
+      transaction = FactoryGirl.create(:transaction, amount: 50)
+
+      account.transactions << transaction
+
+      expect(account.reload.current_balance).to eq 150
+
+      transaction.destroy
+
+      expect(account.reload.current_balance).to eq 100
+    end
+  end
+end

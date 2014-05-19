@@ -59,12 +59,13 @@ feature "Transactions", %q{
         expect(page).to have_content("My Account")
         expect(page).to have_content("Transactions")
 
-        expect(page).to have_table_columns(["Description", "Amount", "Actions"])
+        expect(page).to have_table_columns(["Description", "Amount", "Running total", "Actions"])
 
         expect(page).to have_table_rows_in_order(
-          ["Starting balance", "£123.45", ""],
-          ["Example Transaction", "£30.48", "Edit Delete"],
-          ["Another Transaction", "£12.34", "Edit Delete"]
+          ["Starting balance", "£123.45", "", ""],
+          ["Example Transaction", "£30.48", "£153.93", "Edit Delete"],
+          ["Another Transaction", "£12.34", "£166.27", "Edit Delete"],
+          ["Current balance", "£166.27", "", ""]
         )
       end
 
@@ -112,8 +113,9 @@ feature "Transactions", %q{
         expect(page).to have_content("Transactions")
 
         expect(page).to have_table_rows_in_order(
-          ["Starting balance", "£123.45", ""],
-          ["An Example Transaction", "£20.11", "Edit Delete"]
+          ["Starting balance", "£123.45", "", ""],
+          ["An Example Transaction", "£20.11", "£143.56", "Edit Delete"],
+          ["Current balance", "£143.56", "", ""]
         )
       end
 
@@ -122,8 +124,11 @@ feature "Transactions", %q{
 
         visit account_path(@account)
 
-        expect(page).to have_content("A Transaction")
-        expect(page).to have_content("£24.00")
+        expect(page).to have_table_rows_in_order(
+          ["Starting balance", "£123.45", "", ""],
+          ["A Transaction", "£24.00", "£147.45", "Edit Delete"],
+          ["Current balance", "£147.45", "", ""]
+        )
 
         expect(page).to have_link("Edit")
         click_link "Edit"
@@ -150,24 +155,38 @@ feature "Transactions", %q{
         expect(page).to have_content("Transaction successfully updated.")
 
         expect(page).to have_table_rows_in_order(
-          ["Starting balance", "£123.45", ""],
-          ["Edited Transaction", "£58.65", "Edit Delete"]
+          ["Starting balance", "£123.45", "", ""],
+          ["Edited Transaction", "£58.65", "£182.10", "Edit Delete"],
+          ["Current balance", "£182.10", "", ""]
         )
       end
 
       scenario "Deleting a transaction" do
-        transaction = FactoryGirl.create(:transaction, description: "Old Transaction", amount: 34, account: @account)
+        FactoryGirl.create(:transaction, description: "A Transaction", amount: 24, account: @account)
+        FactoryGirl.create(:transaction, description: "An Old Transaction", amount: 34, account: @account)
 
         visit account_path(@account)
 
-        expect(page).to have_content("Old Transaction")
-        expect(page).to have_content("£34.00")
-        expect(page).to have_link("Delete")
-        click_link "Delete"
+        expect(page).to have_table_rows_in_order(
+          ["Starting balance", "£123.45", "", ""],
+          ["A Transaction", "£24.00", "£147.45", "Edit Delete"],
+          ["An Old Transaction", "£34.00", "£181.45", "Edit Delete"],
+          ["Current balance", "£181.45", "", ""]
+        )
+
+        within 'tbody tr:nth-child(3)' do
+          click_link "Delete"
+        end
 
         expect(current_path).to eq account_path(@account)
         expect(page).to_not have_content("Old Transaction")
         expect(page).to_not have_content("£34.00")
+
+        expect(page).to have_table_rows_in_order(
+          ["Starting balance", "£123.45", "", ""],
+          ["A Transaction", "£24.00", "£147.45", "Edit Delete"],
+          ["Current balance", "£147.45", "", ""]
+        )
 
         expect(page).to have_content("Transaction successfully deleted.")
       end
