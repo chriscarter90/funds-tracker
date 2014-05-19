@@ -1,11 +1,12 @@
 <div class="row header-block">
-  <div class="col-md-9">
+  <div class="col-md-8">
     <h3><%= @account.name %></h3>
     <h4>Transactions</h4>
   </div>
 
-  <div class="col-md-3 header-actions">
-    <%= link_to "Add Transaction", new_account_transaction_path(@account), class: "btn btn-primary" %>
+  <div class="col-md-4 header-actions">
+    <%= link_to "Back to accounts", accounts_path, class: "btn btn-danger" %>
+    <%= link_to "Add transaction", new_account_transaction_path(@account), class: "btn btn-primary" %>
   </div>
 </div>
 

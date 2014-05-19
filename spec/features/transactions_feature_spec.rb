@@ -58,6 +58,7 @@ feature "Transactions", %q{
 
         expect(page).to have_content("My Account")
         expect(page).to have_content("Transactions")
+        expect(page).to have_link("Back to accounts", href: accounts_path)
 
         expect(page).to have_table_columns(["Transaction date", "Description", "Amount", "Running total", "Actions"])
 
@@ -85,9 +86,9 @@ feature "Transactions", %q{
 
           click_link "My Account"
 
-          expect(page).to have_link("Add Transaction", href: new_account_transaction_path(@account))
+          expect(page).to have_link("Add transaction", href: new_account_transaction_path(@account))
 
-          click_link "Add Transaction"
+          click_link "Add transaction"
 
           expect(page).to have_content("New Transaction")
 
