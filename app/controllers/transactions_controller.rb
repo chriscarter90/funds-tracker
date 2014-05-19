@@ -41,7 +41,7 @@ class TransactionsController < ApplicationController
   def find_account
     begin
       @account = current_user.accounts.find(params[:account_id])
-    rescue ActiveRecord::RecordNotFound => e
+    rescue ActiveRecord::RecordNotFound
       redirect_to accounts_path, flash: { error: "Account could not be found." }
     end
   end

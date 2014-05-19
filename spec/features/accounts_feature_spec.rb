@@ -98,7 +98,7 @@ feature "Accounts", %q{
 
     context "editing an account" do
       scenario "as the user whose account it is" do
-        account = FactoryGirl.create(:account, name: "Original Account", starting_balance: 250, user: @user)
+        FactoryGirl.create(:account, name: "Original Account", starting_balance: 250, user: @user)
 
         visit accounts_path
 
@@ -147,7 +147,7 @@ feature "Accounts", %q{
     end
 
     scenario "deleting an account" do
-      account = FactoryGirl.create(:account, name: "Old Account", user: @user)
+      FactoryGirl.create(:account, name: "Old Account", user: @user)
 
       visit accounts_path
 
