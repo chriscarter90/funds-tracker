@@ -62,10 +62,10 @@ feature "Transactions", %q{
         expect(page).to have_table_columns(["Description", "Amount", "Running total", "Actions"])
 
         expect(page).to have_table_rows_in_order(
-          ["Starting balance", "£123.45", "", ""],
+          ["Starting balance", "", "£123.45", ""],
           ["Example Transaction", "£30.48", "£153.93", "Edit Delete"],
           ["Another Transaction", "£12.34", "£166.27", "Edit Delete"],
-          ["Current balance", "£166.27", "", ""]
+          ["Current balance", "", "£166.27", ""]
         )
       end
 
@@ -113,9 +113,9 @@ feature "Transactions", %q{
         expect(page).to have_content("Transactions")
 
         expect(page).to have_table_rows_in_order(
-          ["Starting balance", "£123.45", "", ""],
+          ["Starting balance", "", "£123.45", ""],
           ["An Example Transaction", "£20.11", "£143.56", "Edit Delete"],
-          ["Current balance", "£143.56", "", ""]
+          ["Current balance", "", "£143.56", ""]
         )
       end
 
@@ -125,9 +125,9 @@ feature "Transactions", %q{
         visit account_path(@account)
 
         expect(page).to have_table_rows_in_order(
-          ["Starting balance", "£123.45", "", ""],
+          ["Starting balance", "", "£123.45", ""],
           ["A Transaction", "£24.00", "£147.45", "Edit Delete"],
-          ["Current balance", "£147.45", "", ""]
+          ["Current balance", "", "£147.45", ""]
         )
 
         expect(page).to have_link("Edit")
@@ -155,9 +155,9 @@ feature "Transactions", %q{
         expect(page).to have_content("Transaction successfully updated.")
 
         expect(page).to have_table_rows_in_order(
-          ["Starting balance", "£123.45", "", ""],
+          ["Starting balance", "", "£123.45", ""],
           ["Edited Transaction", "£58.65", "£182.10", "Edit Delete"],
-          ["Current balance", "£182.10", "", ""]
+          ["Current balance", "", "£182.10", ""]
         )
       end
 
@@ -168,10 +168,10 @@ feature "Transactions", %q{
         visit account_path(@account)
 
         expect(page).to have_table_rows_in_order(
-          ["Starting balance", "£123.45", "", ""],
+          ["Starting balance", "", "£123.45", ""],
           ["A Transaction", "£24.00", "£147.45", "Edit Delete"],
           ["An Old Transaction", "£34.00", "£181.45", "Edit Delete"],
-          ["Current balance", "£181.45", "", ""]
+          ["Current balance", "", "£181.45", ""]
         )
 
         within 'tbody tr:nth-child(3)' do
@@ -183,9 +183,9 @@ feature "Transactions", %q{
         expect(page).to_not have_content("£34.00")
 
         expect(page).to have_table_rows_in_order(
-          ["Starting balance", "£123.45", "", ""],
+          ["Starting balance", "", "£123.45", ""],
           ["A Transaction", "£24.00", "£147.45", "Edit Delete"],
-          ["Current balance", "£147.45", "", ""]
+          ["Current balance", "", "£147.45", ""]
         )
 
         expect(page).to have_content("Transaction successfully deleted.")

@@ -26,10 +26,10 @@
             <td>
               <strong>Starting balance</strong>
             </td>
+            <td></td>
             <td>
               <strong><%= as_currency(@account.starting_balance) %></strong>
             </td>
-            <td></td>
             <td></td>
           </tr>
           <% @transactions.inject(@account.starting_balance) do |total, transaction| %>
@@ -54,10 +54,10 @@
             <td>
               <strong>Current balance</strong>
             </td>
+            <td></td>
             <td>
               <strong><%= as_currency(@account.current_balance) %></strong>
             </td>
-            <td></td>
             <td></td>
           </tr>
         </tbody>
