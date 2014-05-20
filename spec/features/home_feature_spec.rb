@@ -27,6 +27,10 @@ feature "Home page", %q{
 
     expect(page).to_not have_link("Log out")
     expect(page).to_not have_content("Logged in as")
+
+    expect(page).to_not have_link("Sections")
+    expect(page).to_not have_link("Accounts")
+    expect(page).to_not have_link("Tags")
   end
 
   scenario "As a logged in user" do
@@ -55,5 +59,9 @@ feature "Home page", %q{
 
     expect(page).to have_link("Log out", href: destroy_user_session_path)
     expect(page).to have_content("Logged in as bob@ineedalife.com")
+
+    expect(page).to have_link("Sections", href: '#')
+    expect(page).to have_link("Accounts", href: accounts_path)
+    expect(page).to have_link("Tags", href: tags_path)
   end
 end
