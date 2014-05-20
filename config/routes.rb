@@ -3,7 +3,7 @@ FundsTracker::Application.routes.draw do
 
   devise_for :users, controllers: { registrations: "users/registrations" }
 
-  resources :tags, except: [:show, :update]
+  resources :tags, except: [:show]
   resources :accounts do
     resources :transactions, except: [:show]
   end
