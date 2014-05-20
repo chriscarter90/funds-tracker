@@ -7,6 +7,7 @@ class Transaction < ActiveRecord::Base
   validate :transaction_date_cannot_be_in_the_future
 
   belongs_to :account
+  belongs_to :tag
 
   scope :newest_first, -> { order(transaction_date: :desc) }
 

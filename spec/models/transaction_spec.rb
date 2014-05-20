@@ -14,6 +14,7 @@ end
 
 describe Transaction, "relationships" do
   it { should belong_to :account }
+  it { should belong_to :tag }
 end
 
 describe Transaction, "scopes" do

@@ -22,4 +22,8 @@ FactoryGirl.define do
     account
     transaction_date { 2.weeks.ago }
   end
+
+  factory :tag do
+    name { Faker::Lorem.word }
+  end
 end

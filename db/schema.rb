@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140519133603) do
+ActiveRecord::Schema.define(version: 20140520092728) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -25,6 +25,13 @@ ActiveRecord::Schema.define(version: 20140519133603) do
 
   add_index "accounts", ["user_id"], name: "index_accounts_on_user_id", using: :btree
 
+  create_table "tags", force: true do |t|
+    t.string  "name"
+    t.integer "user_id"
+  end
+
+  add_index "tags", ["user_id"], name: "index_tags_on_user_id", using: :btree
+
   create_table "transactions", force: true do |t|
     t.string   "description"
     t.decimal  "amount"
@@ -32,9 +39,11 @@ ActiveRecord::Schema.define(version: 20140519133603) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.datetime "transaction_date"
+    t.integer  "tag_id"
   end
 
   add_index "transactions", ["account_id"], name: "index_transactions_on_account_id", using: :btree
+  add_index "transactions", ["tag_id"], name: "index_transactions_on_tag_id", using: :btree
 
   create_table "users", force: true do |t|
     t.string   "email",                  default: "", null: false

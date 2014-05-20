@@ -8,4 +8,5 @@ end
 
 describe User, 'relationships' do
   it { should have_many :accounts }
+  it { should have_many :tags }
 end
