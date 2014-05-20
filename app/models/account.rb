@@ -6,7 +6,7 @@ class Account < ActiveRecord::Base
   validates_uniqueness_of :name, scope: :user
 
   belongs_to :user
-  has_many :transactions
+  has_many :transactions, dependent: :destroy
 
   def update_balance
     if valid?

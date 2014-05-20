@@ -5,5 +5,5 @@ describe Tag, 'validations' do
 end
 
 describe Tag, 'relationships' do
-  it { should have_many :transactions }
+  it { should have_many(:transactions).dependent(:nullify) }
 end

@@ -6,6 +6,6 @@ class User < ActiveRecord::Base
 
   validates :first_name, :last_name, presence: true
 
-  has_many :accounts
-  has_many :tags
+  has_many :accounts, dependent: :destroy
+  has_many :tags, dependent: :destroy
 end

@@ -7,6 +7,6 @@ describe User, 'validations' do
 end
 
 describe User, 'relationships' do
-  it { should have_many :accounts }
-  it { should have_many :tags }
+  it { should have_many(:accounts).dependent(:destroy) }
+  it { should have_many(:tags).dependent(:destroy) }
 end
