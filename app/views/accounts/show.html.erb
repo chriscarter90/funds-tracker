@@ -42,6 +42,11 @@
               </td>
               <td>
                 <%= transaction.description %>
+                <% if transaction.tag.present? %>
+                  <span class="label label-info">
+                    <%= transaction.tag.name %>
+                  </span>
+                <% end %>
               </td>
               <td>
                 <%= as_currency(transaction.amount) %>
