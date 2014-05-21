@@ -5,3 +5,13 @@
     text-align: right;
   }
 }
+
+.middle-align {
+  > tbody, > thead {
+    > tr {
+      > td, > th {
+        vertical-align: middle;
+      }
+    }
+  }
+}
