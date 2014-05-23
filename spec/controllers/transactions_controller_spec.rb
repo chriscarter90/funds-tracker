@@ -361,3 +361,89 @@ describe TransactionsController, "DELETE #destroy" do
     end
   end
 end
+
+describe TransactionsController, "GET #tagged" do
+  context "As a non-logged in user" do
+    before do
+      account = FactoryGirl.create(:account)
+      tag = FactoryGirl.create(:tag)
+      transaction = FactoryGirl.create(:transaction, account: account, tag: tag)
+
+      get :tagged, account_id: account, tag_id: transaction
+    end
+
+    it "redirects to the login page" do
+      expect(response).to redirect_to new_user_session_path
+    end
+  end
+
+  context "As a logged in user" do
+    before do
+      @user = FactoryGirl.create(:user)
+      sign_in @user
+    end
+
+    context "accessing tagged transactions for their account" do
+      before do
+        @account = FactoryGirl.create(:account, user: @user)
+
+        @tag_1 = FactoryGirl.create(:tag, user: @user)
+                 FactoryGirl.create(:tag, user: @user)
+
+        @t1 = FactoryGirl.create(:transaction, account: @account, tag: @tag_1)
+              FactoryGirl.create(:transaction, account: @account)
+        @t3 = FactoryGirl.create(:transaction, account: @account, tag: @tag_1)
+
+        get :tagged, account_id: @account, tag_id: @tag_1
+      end
+
+      it "should assign the account" do
+        expect(assigns(:account)).to eq @account
+      end
+
+      it "should assign the tag" do
+        expect(assigns(:tag)).to eq @tag_1
+      end
+
+      it "should assign transactions with the ones tagged" do
+        expect(assigns(:transactions)).to match_array([@t1, @t3])
+      end
+    end
+
+    context "using someone else's tag" do
+      before do
+        @account = FactoryGirl.create(:account, user: @user)
+
+        other_tag = FactoryGirl.create(:tag)
+
+        get :tagged, account_id: @account, tag_id: other_tag
+      end
+
+      it "should redirect back to the account" do
+        expect(response).to redirect_to account_path(@account)
+      end
+
+      it "should set flash" do
+        expect(flash[:error]).to eq "Tag could not be found."
+      end
+    end
+
+    context "accessing tagged transactions on someone else's account" do
+      before do
+        account = FactoryGirl.create(:account)
+        tag = FactoryGirl.create(:tag)
+        transaction = FactoryGirl.create(:transaction, account: account, tag: tag)
+
+        get :tagged, account_id: account, tag_id: tag
+      end
+
+      it "should redirect back to accounts" do
+        expect(response).to redirect_to accounts_path
+      end
+
+      it "should set flash" do
+        expect(flash[:error]).to eq "Account could not be found."
+      end
+    end
+  end
+end

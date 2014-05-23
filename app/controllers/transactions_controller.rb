@@ -2,6 +2,7 @@ class TransactionsController < ApplicationController
   before_action :authenticate_user!
   before_action :find_account
   before_action :find_transaction, only: [:edit, :update, :destroy]
+  before_action :find_tag, only: [:tagged]
 
   def new
     @transaction = @account.transactions.build
@@ -36,6 +37,11 @@ class TransactionsController < ApplicationController
     redirect_to account_path(@account), flash: { success: "Transaction successfully deleted." }
   end
 
+  def tagged
+    @tag = current_user.tags.find(params[:tag_id])
+    @transactions = @account.transactions.tagged_with(@tag)
+  end
+
   protected
 
   def find_account
@@ -49,6 +55,15 @@ class TransactionsController < ApplicationController
   def find_transaction
     @transaction = @account.transactions.find(params[:id])
   end
+
+  def find_tag
+    begin
+      @tag = current_user.tags.find(params[:tag_id])
+    rescue ActiveRecord::RecordNotFound
+      redirect_to account_path(@account), flash: { error: "Tag could not be found." }
+    end
+  end
+
   def transaction_params
     params.required(:transaction).permit(:description, :amount, :transaction_date, :tag_id)
   end

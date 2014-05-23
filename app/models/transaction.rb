@@ -10,6 +10,7 @@ class Transaction < ActiveRecord::Base
   belongs_to :tag
 
   scope :newest_first, -> { order(transaction_date: :desc) }
+  scope :tagged_with, ->(tag) { where(tag_id: tag)  }
 
   def update_account_balance
     account.update_balance

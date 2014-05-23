@@ -27,6 +27,22 @@ describe Transaction, "scopes" do
       expect(Transaction.newest_first).to eq [@t2, @t1, @t3]
     end
   end
+
+  describe ".tagged_with" do
+    it "should return only those transactions tagged wiht the specified tag" do
+      @tag_1 = FactoryGirl.create(:tag)
+      @tag_2 = FactoryGirl.create(:tag)
+
+      @t1 = FactoryGirl.create(:transaction, tag: @tag_1)
+      @t2 = FactoryGirl.create(:transaction, tag: @tag_2)
+      @t3 = FactoryGirl.create(:transaction, tag: @tag_2)
+      @t4 = FactoryGirl.create(:transaction, tag: @tag_1)
+      @t5 = FactoryGirl.create(:transaction, tag: @tag_1)
+
+      expect(Transaction.tagged_with(@tag_1)).to match_array([@t1, @t4, @t5])
+      expect(Transaction.tagged_with(@tag_2)).to match_array([@t2, @t3])
+    end
+  end
 end
 
 describe Transaction, "callbacks" do

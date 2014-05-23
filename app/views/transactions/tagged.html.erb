@@ -1,12 +1,11 @@
 <div class="row header-block">
   <div class="col-md-8">
     <h3><%= @account.name %></h3>
-    <h4>Transactions</h4>
+    <h4>Transactions tagged with <%= @tag.name %></h4>
   </div>
 
   <div class="col-md-4 header-actions">
     <%= link_to "Back to accounts", accounts_path, class: "btn btn-danger" %>
-    <%= link_to "Add transaction", new_account_transaction_path(@account), class: "btn btn-primary" %>
   </div>
 </div>
 
@@ -18,39 +17,19 @@
           <tr>
             <th>Transaction date</th>
             <th>Description</th>
-            <th>Tagged with...</th>
             <th>Amount</th>
             <th>Running total</th>
             <th>Actions</th>
           </tr>
         </thead>
         <tbody>
-          <tr>
-            <td></td>
-            <td>
-              <strong>Starting balance</strong>
-            </td>
-            <td></td>
-            <td></td>
-            <td>
-              <strong><%= as_currency(@account.starting_balance) %></strong>
-            </td>
-            <td></td>
-          </tr>
-          <% @transactions.inject(@account.starting_balance) do |total, transaction| %>
+          <% @transactions.inject(0) do |total, transaction| %>
             <tr>
               <td>
                 <%= format_date(transaction.transaction_date, :longer) %>
               </td>
               <td>
                 <%= transaction.description %>
-              </td>
-              <td>
-                <% if transaction.tag.present? %>
-                  <span class="label label-info">
-                    <%= link_to transaction.tag.name, tagged_account_transactions_path(@account, transaction.tag) %>
-                  </span>
-                <% end %>
               </td>
               <td>
                 <%= as_currency(transaction.amount) %>
@@ -68,12 +47,11 @@
           <tr>
             <td></td>
             <td>
-              <strong>Current balance</strong>
+              <strong>Total</strong>
             </td>
             <td></td>
-            <td></td>
             <td>
-              <strong><%= as_currency(@account.current_balance) %></strong>
+              <strong><%= as_currency(@transactions.sum(:amount)) %></strong>
             </td>
             <td></td>
           </tr>
@@ -83,7 +61,7 @@
       <div class="panel panel-primary">
         <div class="panel-heading">
           <h5>
-            You have no transactions.
+            No transactions tagged with <%= @tag.name %> found.
           </h5>
         </div>
         <div class="panel-body">
