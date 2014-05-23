@@ -47,7 +47,7 @@
               </td>
               <td>
                 <% if transaction.tag.present? %>
-                  <span class="label label-info">
+                  <span class="label label-warning">
                     <%= link_to transaction.tag.name, tagged_account_transactions_path(@account, transaction.tag) %>
                   </span>
                 <% end %>
