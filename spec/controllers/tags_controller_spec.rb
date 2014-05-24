@@ -16,7 +16,7 @@ describe TagsController, "GET #index" do
       user = FactoryGirl.create(:user)
       sign_in user
 
-      user.tags = FactoryGirl.create_list(:tag, 6)
+      user.tags = FactoryGirl.create_list(:tag, 6, user: user)
 
       get :index
     end

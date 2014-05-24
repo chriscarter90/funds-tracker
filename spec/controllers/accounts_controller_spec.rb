@@ -16,7 +16,7 @@ describe AccountsController, "GET #index" do
       user = FactoryGirl.create(:user)
       sign_in user
 
-      user.accounts = FactoryGirl.create_list(:account, 3)
+      user.accounts = FactoryGirl.create_list(:account, 3, user: user)
 
       get :index
     end
