@@ -1,0 +1,11 @@
+<h4>Tags</h4>
+
+<ul>
+  <% @tags.each do |t| %>
+    <li>
+      <span class="label label-success">
+        <%= link_to t.name, tagged_account_transactions_path(@account, t) %>
+      </span>
+    </li>
+  <% end %>
+</ul>
