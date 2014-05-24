@@ -19,9 +19,13 @@ describe TransactionsController, "GET #index" do
       sign_in user
 
       @account = FactoryGirl.create(:account, user: user)
-      @account.transactions << [FactoryGirl.create(:transaction, description: "Transaction #1", transaction_date: 5.days.ago),
-                                FactoryGirl.create(:transaction, description: "Transaction #3", transaction_date: 5.weeks.ago),
-                                FactoryGirl.create(:transaction, description: "Transaction #2", transaction_date: 3.days.ago)]
+
+      @tag_1 = FactoryGirl.create(:tag, user: user)
+      @tag_2 = FactoryGirl.create(:tag, user: user)
+
+      @account.transactions << [FactoryGirl.create(:transaction, description: "Transaction #1", transaction_date: 5.days.ago, tag: @tag_1),
+                                FactoryGirl.create(:transaction, description: "Transaction #3", transaction_date: 5.weeks.ago, tag: @tag_2),
+                                FactoryGirl.create(:transaction, description: "Transaction #2", transaction_date: 3.days.ago, tag: @tag_1)]
 
       get :index, account_id: @account
     end
@@ -33,6 +37,10 @@ describe TransactionsController, "GET #index" do
     it "assigns the transactions" do
       expect(assigns(:transactions).size).to eq 3
       expect(assigns(:transactions).map(&:description)).to eq ["Transaction #2", "Transaction #1", "Transaction #3"]
+    end
+
+    it "assigns the tags" do
+      expect(assigns(:tags)).to match_array [@tag_1, @tag_2]
     end
 
     it "renders show" do

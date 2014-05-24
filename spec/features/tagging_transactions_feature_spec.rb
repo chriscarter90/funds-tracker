@@ -74,6 +74,11 @@ feature "Tagging transactions", %q{
     )
 
     within "tr:nth-child(2)" do
+      expect(page).to have_link("Water", href: tagged_account_transactions_path(account, water_tag))
+    end
+
+    within ".tags" do
+      expect(page).to have_link("Water", href: tagged_account_transactions_path(account, water_tag))
       click_link "Water"
     end
 
@@ -92,6 +97,11 @@ feature "Tagging transactions", %q{
     visit account_transactions_path(account)
 
     within "tr:nth-child(3)" do
+      expect(page).to have_link("Food", href: tagged_account_transactions_path(account, food_tag))
+    end
+
+    within ".tags" do
+      expect(page).to have_link("Food", href: tagged_account_transactions_path(account, food_tag))
       click_link "Food"
     end
 

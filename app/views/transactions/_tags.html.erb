@@ -1,11 +1,11 @@
 <h4>Tags</h4>
 
-<ul>
+<ul class="tags">
   <% @tags.each do |t| %>
     <li>
-      <span class="label label-success">
-        <%= link_to t.name, tagged_account_transactions_path(@account, t) %>
-      </span>
+      <%= link_to tagged_account_transactions_path(@account, t), class: 'tag' do %>
+        <span class="label label-info"><%= t.name %></span>
+      <% end %>
     </li>
   <% end %>
 </ul>

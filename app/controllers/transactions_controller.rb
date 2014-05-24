@@ -6,6 +6,7 @@ class TransactionsController < ApplicationController
 
   def index
     @transactions = @account.transactions.newest_first
+    @tags = current_user.tags
   end
 
   def new

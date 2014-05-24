@@ -8,9 +8,9 @@
     </td>
     <td>
       <% if transaction.tag.present? %>
-        <span class="label label-warning">
-          <%= link_to transaction.tag.name, tagged_account_transactions_path(@account, transaction.tag) %>
-        </span>
+        <%= link_to tagged_account_transactions_path(@account, transaction.tag), class: 'tag' do %>
+          <span class="label label-info"><%= transaction.tag.name %></span>
+        <% end %>
       <% end %>
     </td>
     <td>
