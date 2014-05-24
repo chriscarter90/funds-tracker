@@ -9,7 +9,7 @@ feature "Transactions", %q{
       @account = FactoryGirl.create(:account)
     end
     scenario "Trying to view transactions for an account" do
-      visit account_path(@account)
+      visit account_transactions_path(@account)
 
       expect(current_path).to eq new_user_session_path
 
@@ -54,7 +54,7 @@ feature "Transactions", %q{
 
         click_link "My Account"
 
-        expect(current_path).to eq account_path(@account)
+        expect(current_path).to eq account_transactions_path(@account)
 
         expect(page).to have_content("My Account")
         expect(page).to have_content("Transactions")
@@ -71,7 +71,7 @@ feature "Transactions", %q{
       end
 
       scenario "Viewing an empty list of transactions" do
-        visit account_path(@account)
+        visit account_transactions_path(@account)
 
         expect(page).to have_content("My Account")
         expect(page).to have_content("Transactions")
@@ -110,7 +110,7 @@ feature "Transactions", %q{
           fill_in "Amount", with: 20.11
           click_button "Create Transaction"
 
-          expect(current_path).to eq account_path(@account)
+          expect(current_path).to eq account_transactions_path(@account)
           expect(page).to have_content("Transaction successfully created.")
           expect(page).to have_content("My Account")
           expect(page).to have_content("Transactions")
@@ -126,7 +126,7 @@ feature "Transactions", %q{
       scenario "Editing an existing transaction" do
         transaction = FactoryGirl.create(:transaction, description: "A Transaction", amount: 24, account: @account, transaction_date: "02-01-2014")
 
-        visit account_path(@account)
+        visit account_transactions_path(@account)
 
         expect(page).to have_table_rows_in_order(
           ["", "Starting balance", "", "", "£123.45", ""],
@@ -158,7 +158,7 @@ feature "Transactions", %q{
         fill_in "Transaction date", with: "04-01-2014"
         click_button "Update Transaction"
 
-        expect(current_path).to eq account_path(@account)
+        expect(current_path).to eq account_transactions_path(@account)
         expect(page).to have_content("Transaction successfully updated.")
 
         expect(page).to have_table_rows_in_order(
@@ -172,7 +172,7 @@ feature "Transactions", %q{
         FactoryGirl.create(:transaction, description: "A Transaction", amount: 24, account: @account, transaction_date: "09-04-2014")
         FactoryGirl.create(:transaction, description: "An Old Transaction", amount: 34, account: @account, transaction_date: "08-04-2014")
 
-        visit account_path(@account)
+        visit account_transactions_path(@account)
 
         expect(page).to have_table_rows_in_order(
           ["", "Starting balance", "", "", "£123.45", ""],
@@ -185,7 +185,7 @@ feature "Transactions", %q{
           click_link "Delete"
         end
 
-        expect(current_path).to eq account_path(@account)
+        expect(current_path).to eq account_transactions_path(@account)
         expect(page).to_not have_content("Old Transaction")
         expect(page).to_not have_content("£34.00")
 
@@ -205,7 +205,7 @@ feature "Transactions", %q{
       end
 
       scenario "Trying to view transactions" do
-        visit account_path(@account)
+        visit account_transactions_path(@account)
 
         expect(current_path).to eq accounts_path
 

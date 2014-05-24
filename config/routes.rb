@@ -4,8 +4,8 @@ FundsTracker::Application.routes.draw do
   devise_for :users, controllers: { registrations: "users/registrations" }
 
   resources :tags, except: [:show]
-  resources :accounts do
-    resources :transactions, except: [:index, :show] do
+  resources :accounts, except: [:show] do
+    resources :transactions, except: [:show] do
       get '/tagged/:tag_id', to: 'transactions#tagged', as: :tagged, on: :collection
     end
   end

@@ -22,7 +22,7 @@
           <% @accounts.each do |a| %>
             <tr>
               <td>
-                <%= link_to a.name, account_path(a) %>
+                <%= link_to a.name, account_transactions_path(a) %>
               </td>
               <td>
                 <%= link_to "Edit", edit_account_path(a), class: "btn btn-warning" %>

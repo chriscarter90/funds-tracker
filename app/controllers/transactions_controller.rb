@@ -4,6 +4,10 @@ class TransactionsController < ApplicationController
   before_action :find_transaction, only: [:edit, :update, :destroy]
   before_action :find_tag, only: [:tagged]
 
+  def index
+    @transactions = @account.transactions.newest_first
+  end
+
   def new
     @transaction = @account.transactions.build
   end
@@ -12,7 +16,7 @@ class TransactionsController < ApplicationController
     @transaction = @account.transactions.build(transaction_params)
 
     if @transaction.save
-      redirect_to account_path(@account), flash: { success: "Transaction successfully created." }
+      redirect_to account_transactions_path(@account), flash: { success: "Transaction successfully created." }
     else
       flash[:error] = "Transaction not created."
       render :new
@@ -24,7 +28,7 @@ class TransactionsController < ApplicationController
 
   def update
     if @transaction.update_attributes(transaction_params)
-      redirect_to account_path(@account), flash: { success: "Transaction successfully updated." }
+      redirect_to account_transactions_path(@account), flash: { success: "Transaction successfully updated." }
     else
       flash[:error] = "Transaction not updated."
       render :edit
@@ -34,7 +38,7 @@ class TransactionsController < ApplicationController
   def destroy
     @transaction.destroy
 
-    redirect_to account_path(@account), flash: { success: "Transaction successfully deleted." }
+    redirect_to account_transactions_path(@account), flash: { success: "Transaction successfully deleted." }
   end
 
   def tagged
@@ -60,7 +64,7 @@ class TransactionsController < ApplicationController
     begin
       @tag = current_user.tags.find(params[:tag_id])
     rescue ActiveRecord::RecordNotFound
-      redirect_to account_path(@account), flash: { error: "Tag could not be found." }
+      redirect_to account_transactions_path(@account), flash: { error: "Tag could not be found." }
     end
   end
 

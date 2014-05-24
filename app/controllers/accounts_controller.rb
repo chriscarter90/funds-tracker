@@ -6,10 +6,6 @@ class AccountsController < ApplicationController
     @accounts = current_user.accounts
   end
 
-  def show
-    @transactions = @account.transactions.newest_first
-  end
-
   def new
     @account = current_user.accounts.build
   end

@@ -27,47 +27,6 @@ describe AccountsController, "GET #index" do
   end
 end
 
-describe AccountsController, "GET #show" do
-  context "As a non-logged in user" do
-    before do
-      account = FactoryGirl.create(:account)
-
-      get :show, id: account
-    end
-
-    it "redirects to the login page" do
-      expect(response).to redirect_to new_user_session_path
-    end
-  end
-
-  context "As a logged in user" do
-    before do
-      user = FactoryGirl.create(:user)
-      sign_in user
-
-      @account = FactoryGirl.create(:account, user: user)
-      @account.transactions << [FactoryGirl.create(:transaction, description: "Transaction #1", transaction_date: 5.days.ago),
-                                FactoryGirl.create(:transaction, description: "Transaction #3", transaction_date: 5.weeks.ago),
-                                FactoryGirl.create(:transaction, description: "Transaction #2", transaction_date: 3.days.ago)]
-
-      get :show, id: @account
-    end
-
-    it "assigns the account" do
-      expect(assigns(:account)).to eq @account
-    end
-
-    it "assigns the transactions" do
-      expect(assigns(:transactions).size).to eq 3
-      expect(assigns(:transactions).map(&:description)).to eq ["Transaction #2", "Transaction #1", "Transaction #3"]
-    end
-
-    it "renders show" do
-      expect(response).to render_template :show
-    end
-  end
-end
-
 describe AccountsController, "GET #new" do
   context "As a non-logged in user" do
     before do

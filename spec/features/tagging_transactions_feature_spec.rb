@@ -23,7 +23,7 @@ feature "Tagging transactions", %q{
 
     click_button "Update Transaction"
 
-    expect(current_path).to eq account_path(account)
+    expect(current_path).to eq account_transactions_path(account)
 
     expect(page).to have_content("Transaction successfully updated.")
 
@@ -39,7 +39,7 @@ feature "Tagging transactions", %q{
 
     click_button "Update Transaction"
 
-    expect(current_path).to eq account_path(account)
+    expect(current_path).to eq account_transactions_path(account)
 
     expect(page).to have_table_rows_in_order(
       ["", "Starting balance", "", "", "£10.00", ""],
@@ -63,7 +63,7 @@ feature "Tagging transactions", %q{
       FactoryGirl.create(:transaction, description: "Water #1", amount: 40, tag: water_tag, transaction_date: "03-01-2014")
     ]
 
-    visit account_path(account)
+    visit account_transactions_path(account)
 
     expect(page).to have_table_rows_in_order(
       ["", "Starting balance", "", "", "£10.00", ""],
@@ -89,7 +89,7 @@ feature "Tagging transactions", %q{
       ["", "Total", "", "£40.00", ""]
     )
 
-    visit account_path(account)
+    visit account_transactions_path(account)
 
     within "tr:nth-child(3)" do
       click_link "Food"
