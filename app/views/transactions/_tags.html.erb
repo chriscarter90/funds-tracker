@@ -3,9 +3,7 @@
 <ul class="tags">
   <% @tags.each do |t| %>
     <li>
-      <%= link_to tagged_account_transactions_path(@account, t), class: 'tag' do %>
-        <span class="label label-info"><%= t.name %></span>
-      <% end %>
+      <%= tag_with_link(t, tagged_account_transactions_path(@account, t)) %>
     </li>
   <% end %>
 </ul>
