@@ -1,0 +1,28 @@
+<% @transactions.inject(@account.starting_balance) do |total, transaction| %>
+  <tr>
+    <td>
+      <%= format_date(transaction.transaction_date, :longer) %>
+    </td>
+    <td>
+      <%= transaction.description %>
+    </td>
+    <td>
+      <% if transaction.tag.present? %>
+        <span class="label label-warning">
+          <%= link_to transaction.tag.name, tagged_account_transactions_path(@account, transaction.tag) %>
+        </span>
+      <% end %>
+    </td>
+    <td>
+      <%= as_currency(transaction.amount) %>
+    </td>
+    <td>
+      <%= as_currency(total + transaction.amount) %>
+    </td>
+    <td>
+      <%= link_to "Edit", edit_account_transaction_path(@account, transaction), class: "btn btn-warning" %>
+      <%= link_to "Delete", account_transaction_path(@account, transaction), method: :delete, class: "btn btn-danger", data: { confirm: "Are you sure you want to delete this account?" } %>
+    </td>
+  </tr>
+  <%- total + transaction.amount %>
+<% end %>
