@@ -17,7 +17,7 @@
   <%= f.association :tag, collection: current_user.tags, label_method: :name, value_method: :id, include_blank: '-- Select a tag --' %>
 
   <div class="form-group">
-    <div class="col-md-offset-2 col-md-10">
+    <div class="col-md-offset-2 col-md-10 col-xs-12">
       <%= f.submit class: "btn btn-primary" %>
     </div>
   </div>

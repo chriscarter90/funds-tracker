@@ -1,15 +1,15 @@
 <div class="row header-block">
-  <div class="col-md-8">
+  <div class="col-md-8 col-xs-12">
     <h3>Accounts</h3>
   </div>
 
-  <div class="col-md-4 header-actions">
+  <div class="col-md-4 col-xs-12 header-actions">
     <%= link_to "New Account", new_account_path, class: "btn btn-primary" %>
   </div>
 </div>
 
 <div class="row">
-  <div class="col-md-12">
+  <div class="col-md-12 col-xs-12">
     <% if @accounts.any? %>
       <table class="table middle-align">
         <thead>

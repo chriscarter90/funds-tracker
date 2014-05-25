@@ -1,59 +1,63 @@
 <div class="row header-block">
-  <div class="col-md-9">
+  <div class="col-md-9 col-xs-12">
     <h3>Edit <%= resource_name.to_s.humanize %></h3>
   </div>
 </div>
 
 <div class="row">
-  <%= simple_form_for resource, as: resource_name, url: registration_path(resource_name), html: { class: 'form-horizontal', role: "form", method: :put },
-    wrapper: :horizontal_form,
-    wrapper_mappings: {
-      check_boxes: :horizontal_radio_and_checkboxes,
-      radio_buttons: :horizontal_radio_and_checkboxes,
-      file: :horizontal_file_input,
-      boolean: :horizontal_boolean
-    } do |f| %>
+  <div class="col-md-12 col-xs-12">
+    <%= simple_form_for resource, as: resource_name, url: registration_path(resource_name), html: { class: 'form-horizontal', role: "form", method: :put },
+      wrapper: :horizontal_form,
+      wrapper_mappings: {
+        check_boxes: :horizontal_radio_and_checkboxes,
+        radio_buttons: :horizontal_radio_and_checkboxes,
+        file: :horizontal_file_input,
+        boolean: :horizontal_boolean
+      } do |f| %>
 
-    <% if devise_mapping.confirmable? && resource.pending_reconfirmation? %>
-      <div>Currently waiting confirmation for: <%= resource.unconfirmed_email %></div>
-    <% end %>
+      <% if devise_mapping.confirmable? && resource.pending_reconfirmation? %>
+        <div>Currently waiting confirmation for: <%= resource.unconfirmed_email %></div>
+      <% end %>
 
-    <%= f.input :first_name, placeholder: "First name", autofocus: true %>
+      <%= f.input :first_name, placeholder: "First name", autofocus: true %>
 
-    <%= f.input :last_name, placeholder: "Last name" %>
+      <%= f.input :last_name, placeholder: "Last name" %>
 
-    <%= f.input :email, placeholder: "Email", required: true %>
+      <%= f.input :email, placeholder: "Email", required: true %>
 
-    <%= f.input :password, placeholer: "Password", required: true, hint: "(leave blank if you don't want to change it)" %>
+      <%= f.input :password, placeholer: "Password", required: true, hint: "(leave blank if you don't want to change it)" %>
 
-    <%= f.input :password_confirmation, placeholer: "Confirm password", required: true %>
+      <%= f.input :password_confirmation, placeholer: "Confirm password", required: true %>
 
-    <%= f.input :current_password, placeholder: "Current password", hint: "(we need your current password to confirm your changes)" %>
+      <%= f.input :current_password, placeholder: "Current password", hint: "(we need your current password to confirm your changes)" %>
 
-    <div class="form-group">
-      <div class="col-md-offset-2 col-md-10">
-        <%= f.submit "Update", class: "btn btn-primary" %>
+      <div class="form-group">
+        <div class="col-md-offset-2 col-md-10 col-xs-12">
+          <%= f.submit "Update", class: "btn btn-primary" %>
+        </div>
       </div>
-    </div>
-  <% end %>
+    <% end %>
+  </div>
 </div>
 
 <hr>
 
 <div class="row">
-  <h3>Cancel my account</h3>
+  <div class="col-md-12 col-xs-12">
+    <h3>Cancel my account</h3>
 
-  <form class="simple_form form-horizontal">
-    <div class="col-md-offset-2 col-md-10">
-      <div class="form-group">
-        <p class="form-control-static">Unhappy?</p>
-      </div>
-    </div>
-
-    <div class="form-group">
+    <form class="simple_form form-horizontal">
       <div class="col-md-offset-2 col-md-10">
-        <%= link_to "Cancel my account", registration_path(resource_name), :data => { :confirm => "Are you sure?" }, :method => :delete, class: "btn btn-danger" %>
+        <div class="form-group">
+          <p class="form-control-static">Unhappy?</p>
+        </div>
       </div>
-    </div>
-  </form>
+
+      <div class="form-group">
+        <div class="col-md-offset-2 col-md-10 col-xs-12">
+          <%= link_to "Cancel my account", registration_path(resource_name), :data => { :confirm => "Are you sure?" }, :method => :delete, class: "btn btn-danger" %>
+        </div>
+      </div>
+    </form>
+  </div>
 </div>

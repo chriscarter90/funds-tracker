@@ -1,24 +1,24 @@
 <div class="row header-block">
-  <div class="col-md-8">
+  <div class="col-md-8 col-xs-12">
     <h3><%= @account.name %></h3>
     <h4>Transactions</h4>
   </div>
 
-  <div class="col-md-4 header-actions">
+  <div class="col-md-4 col-xs-12 header-actions">
     <%= link_to "Back to accounts", accounts_path, class: "btn btn-danger" %>
     <%= link_to "Add transaction", new_account_transaction_path(@account), class: "btn btn-primary" %>
   </div>
 </div>
 
 <div class="row">
-  <div class="col-md-9">
+  <div class="col-md-9 col-xs-12">
     <% if @transactions.any? %>
       <%= render 'transactions_table' %>
     <% else %>
       <%= render 'no_transactions' %>
     <% end %>
   </div>
-  <div class="col-md-3">
+  <div class="col-md-3 col-xs-12">
     <%= render 'tags' %>
   </div>
 </div>
