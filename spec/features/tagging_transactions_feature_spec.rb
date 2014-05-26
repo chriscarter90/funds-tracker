@@ -125,4 +125,73 @@ feature "Tagging transactions", %q{
     expect(page).to have_content("Try adding one here.")
     expect(page).to have_link("here", href: new_account_transaction_path(account))
   end
+
+  scenario "Viewing tagged transaction across all accounts" do
+    user = FactoryGirl.create(:user)
+    sign_in_as user
+
+    food_tag = FactoryGirl.create(:tag, name: "Food", user: user)
+    water_tag = FactoryGirl.create(:tag, name: "Water", user: user)
+    other_tag = FactoryGirl.create(:tag, name: "Other", user: user)
+
+    account_1 = FactoryGirl.create(:account, name: "Account #1", user: user)
+    account_1.transactions << [
+      FactoryGirl.create(:transaction, description: "Food #1", amount: 20, tag: food_tag, transaction_date: "01-01-2014"),
+      FactoryGirl.create(:transaction, description: "Food #2", amount: 30, tag: food_tag, transaction_date: "02-01-2014"),
+      FactoryGirl.create(:transaction, description: "Water #1", amount: 40, tag: water_tag, transaction_date: "03-01-2014"),
+    ]
+
+    account_2 = FactoryGirl.create(:account, name: "Account #2", user: user)
+    account_2.transactions << [
+      FactoryGirl.create(:transaction, description: "Food #3", amount: 50, tag: food_tag, transaction_date: "07-01-2014"),
+      FactoryGirl.create(:transaction, description: "Water #2", amount: 45, tag: water_tag, transaction_date: "08-01-2014")
+    ]
+
+    visit accounts_path
+
+    within ".tags" do
+      expect(page).to have_link("Food", href: tagged_accounts_path(food_tag))
+      click_link "Food"
+    end
+
+    expect(current_path).to eq tagged_accounts_path(food_tag)
+
+    expect(page).to have_content("All Accounts")
+    expect(page).to have_content("Transactions tagged with Food")
+
+    expect(page).to have_table_columns(["Transaction date", "Description", "Account", "Amount", "Running total", "Actions"])
+
+    expect(page).to have_table_rows_in_order(
+      ["7th January 2014", "Food #3", "Account #2", "£50.00", "£50.00", "Edit Delete"],
+      ["2nd January 2014", "Food #2", "Account #1", "£30.00", "£80.00", "Edit Delete"],
+      ["1st January 2014", "Food #1", "Account #1", "£20.00", "£100.00", "Edit Delete"],
+      ["", "Total", "", "", "£100.00", ""]
+    )
+
+    visit accounts_path
+
+    within ".tags" do
+      expect(page).to have_link("Water", href: tagged_accounts_path(water_tag))
+      click_link "Water"
+    end
+
+    expect(current_path).to eq tagged_accounts_path(water_tag)
+
+    expect(page).to have_content("All Accounts")
+    expect(page).to have_content("Transactions tagged with Water")
+
+    expect(page).to have_table_rows_in_order(
+      ["8th January 2014", "Water #2", "Account #2", "£45.00", "£45.00", "Edit Delete"],
+      ["3rd January 2014", "Water #1", "Account #1", "£40.00", "£85.00", "Edit Delete"],
+      ["", "Total", "", "", "£85.00", ""]
+    )
+
+    visit tagged_accounts_path(other_tag)
+
+    expect(page).to have_content("All Accounts")
+    expect(page).to have_content("Transactions tagged with Other")
+
+    expect(page).to have_content("No transactions tagged with Other found.")
+    expect(page).to have_content("Try adding one to an account.")
+  end
 end

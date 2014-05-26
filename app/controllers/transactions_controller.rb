@@ -43,7 +43,6 @@ class TransactionsController < ApplicationController
   end
 
   def tagged
-    @tag = current_user.tags.find(params[:tag_id])
     @transactions = @account.transactions.tagged_with(@tag)
   end
 

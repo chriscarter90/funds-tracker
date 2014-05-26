@@ -1,0 +1,21 @@
+<table class="table middle-align">
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Actions</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @accounts.each do |a| %>
+      <tr>
+        <td>
+          <%= link_to a.name, account_transactions_path(a) %>
+        </td>
+        <td>
+          <%= link_to "Edit", edit_account_path(a), class: "btn btn-warning" %>
+          <%= link_to "Delete", account_path(a), method: :delete, class: "btn btn-danger", data: { confirm: "Are you sure you want to delete this account?" } %>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>

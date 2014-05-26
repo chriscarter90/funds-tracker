@@ -24,7 +24,7 @@ FactoryGirl.define do
   end
 
   factory :tag do
-    name { Faker::Lorem.word }
+    name { Faker::Lorem.words(2).join(" ") }
     user
   end
 end

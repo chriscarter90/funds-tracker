@@ -5,6 +5,7 @@ FundsTracker::Application.routes.draw do
 
   resources :tags, except: [:show]
   resources :accounts, except: [:show] do
+    get '/tagged/:tag_id', to: 'accounts#tagged', as: :tagged, on: :collection
     resources :transactions, except: [:show] do
       get '/tagged/:tag_id', to: 'transactions#tagged', as: :tagged, on: :collection
     end
