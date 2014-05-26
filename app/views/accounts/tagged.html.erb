@@ -43,7 +43,7 @@
               </td>
               <td>
                 <%= link_to "Edit", edit_account_transaction_path(transaction.account, transaction), class: "btn btn-warning" %>
-                <%= link_to "Delete", account_transaction_path(transaction.account, transaction), method: :delete, class: "btn btn-danger", data: { confirm: "Are you sure you want to delete this account?" } %>
+                <%= link_to "Delete", account_transaction_path(transaction.account, transaction), method: :delete, class: "btn btn-danger", data: { confirm: "Are you sure you want to delete this transaction?" } %>
               </td>
             </tr>
             <%- total + transaction.amount %>
