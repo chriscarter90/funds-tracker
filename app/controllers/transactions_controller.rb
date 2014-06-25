@@ -5,7 +5,7 @@ class TransactionsController < ApplicationController
   before_action :find_tag, only: [:tagged]
 
   def index
-    @transactions = @account.transactions.newest_first
+    @transactions = @account.transactions.newest_first.page(params[:page]).per(10)
     @tags = current_user.tags
   end
 

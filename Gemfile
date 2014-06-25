@@ -23,6 +23,7 @@ gem 'simplecov'
 gem 'rails-i18n'
 
 gem 'dotenv-rails'
+gem 'kaminari'
 
 group :test do
   gem 'database_cleaner'

@@ -70,6 +70,44 @@ feature "Transactions", %q{
         )
       end
 
+      scenario "Viewing a list of transactions with pagination" do
+        1.upto(15) do |i|
+          @account.transactions << FactoryGirl.create(:transaction, description: "Transaction #{i}.", transaction_date: i.days.ago)
+        end
+
+        visit account_transactions_path(@account)
+
+        1.upto(10) do |j|
+          expect(page).to have_content("Transaction #{j}.")
+        end
+
+        11.upto(15) do |j|
+          expect(page).to_not have_content("Transaction #{j}.")
+        end
+
+        within '.pagination' do
+          expect(page).to have_link("2", href: account_transactions_path(@account, page: 2))
+          expect(page).to have_link("Next")
+          expect(page).to have_link("Last")
+        end
+
+        click_link "Next"
+
+        1.upto(10) do |j|
+          expect(page).to_not have_content("Transaction #{j}.")
+        end
+
+        11.upto(15) do |j|
+          expect(page).to have_content("Transaction #{j}.")
+        end
+
+        within '.pagination' do
+          expect(page).to have_link("First")
+          expect(page).to have_link("Prev")
+          expect(page).to have_link("1", href: account_transactions_path(@account))
+        end
+      end
+
       scenario "Viewing an empty list of transactions" do
         visit account_transactions_path(@account)
 
