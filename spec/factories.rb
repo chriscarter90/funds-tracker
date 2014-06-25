@@ -11,14 +11,14 @@ FactoryGirl.define do
 
   factory :account do
     name { Faker::Lorem.words(3).join(" ") }
-    starting_balance { 1 + (rand(899)/100) }
+    starting_balance { 1 + (rand(899)/100.00) }
     user
   end
 
   factory :transaction do
     description { Faker::Lorem.words(7).join(" ") }
     # Generates an amount anywhere between £1 and £9.99
-    amount { 1 + (rand(899)/100) }
+    amount { 1 + (rand(899)/100.00) }
     account
     transaction_date { 2.weeks.ago }
   end
