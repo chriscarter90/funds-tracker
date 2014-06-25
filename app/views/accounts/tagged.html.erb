@@ -33,7 +33,7 @@
                 <%= transaction.description %>
               </td>
               <td>
-                <%= link_to(transaction.account.name, transaction.account) %>
+                <%= link_to transaction.account.name, account_transactions_path(transaction.account) %>
               </td>
               <td>
                 <%= as_currency(transaction.amount) %>

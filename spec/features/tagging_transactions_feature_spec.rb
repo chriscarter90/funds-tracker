@@ -186,6 +186,9 @@ feature "Tagging transactions", %q{
       ["", "Total", "", "", "£85.00", ""]
     )
 
+    expect(page).to have_link("Account #1", href: account_transactions_path(account_1))
+    expect(page).to have_link("Account #2", href: account_transactions_path(account_2))
+
     visit tagged_accounts_path(other_tag)
 
     expect(page).to have_content("All Accounts")
