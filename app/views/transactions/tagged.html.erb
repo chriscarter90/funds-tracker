@@ -23,7 +23,18 @@
           </tr>
         </thead>
         <tbody>
-          <% @transactions.inject(0) do |total, transaction| %>
+          <tr>
+            <td></td>
+            <td>
+              <strong>Running total</strong>
+            </td>
+            <td></td>
+            <td>
+              <strong><%= as_currency(@running_total) %></strong>
+            </td>
+            <td></td>
+          </tr>
+          <% @transactions.inject(@running_total) do |total, transaction| %>
             <tr>
               <td>
                 <%= format_date(transaction.transaction_date, :longer) %>
@@ -47,16 +58,18 @@
           <tr>
             <td></td>
             <td>
-              <strong>Total</strong>
+              <strong>Running total</strong>
             </td>
             <td></td>
             <td>
-              <strong><%= as_currency(@transactions.sum(:amount)) %></strong>
+              <strong><%= as_currency(@running_total + @transactions.pluck(:amount).sum) %></strong>
             </td>
             <td></td>
           </tr>
         </tbody>
       </table>
+
+      <%= paginate @transactions %>
     <% else %>
       <div class="panel panel-primary">
         <div class="panel-heading">

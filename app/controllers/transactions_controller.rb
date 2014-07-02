@@ -50,7 +50,13 @@ class TransactionsController < ApplicationController
   end
 
   def tagged
-    @transactions = @account.transactions.tagged_with(@tag)
+    params[:page] ||= 1
+    per_page = 10
+
+    @transactions = @account.transactions.tagged_with(@tag).newest_first.page(params[:page]).per(per_page)
+    past_sum = @account.transactions.tagged_with(@tag).newest_first.limit((params[:page].to_i - 1) * per_page).pluck(:amount).sum
+
+    @running_total = past_sum
   end
 
   protected

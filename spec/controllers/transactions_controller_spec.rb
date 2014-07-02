@@ -472,38 +472,82 @@ describe TransactionsController, "GET #tagged" do
     before do
       @user = FactoryGirl.create(:user)
       sign_in @user
+
+      @account = FactoryGirl.create(:account, user: @user)
     end
 
     context "accessing tagged transactions for their account" do
-      before do
-        @account = FactoryGirl.create(:account, user: @user)
+      context "with less than a page" do
+        before do
+          @tag_1 = FactoryGirl.create(:tag, user: @user)
+                   FactoryGirl.create(:tag, user: @user)
 
-        @tag_1 = FactoryGirl.create(:tag, user: @user)
-                 FactoryGirl.create(:tag, user: @user)
+          @t1 = FactoryGirl.create(:transaction, account: @account, tag: @tag_1)
+                FactoryGirl.create(:transaction, account: @account)
+          @t3 = FactoryGirl.create(:transaction, account: @account, tag: @tag_1)
 
-        @t1 = FactoryGirl.create(:transaction, account: @account, tag: @tag_1)
-              FactoryGirl.create(:transaction, account: @account)
-        @t3 = FactoryGirl.create(:transaction, account: @account, tag: @tag_1)
+          get :tagged, account_id: @account, tag_id: @tag_1
+        end
 
-        get :tagged, account_id: @account, tag_id: @tag_1
+        it "should assign the account" do
+          expect(assigns(:account)).to eq @account
+        end
+
+        it "should assign the tag" do
+          expect(assigns(:tag)).to eq @tag_1
+        end
+
+        it "should assign transactions with the ones tagged" do
+          expect(assigns(:transactions)).to match_array([@t1, @t3])
+        end
       end
 
-      it "should assign the account" do
-        expect(assigns(:account)).to eq @account
-      end
+      context "with more than one page" do
+        before do
+          @tag = FactoryGirl.create(:tag, user: @user)
+          @other_tag = FactoryGirl.create(:tag, user: @user)
 
-      it "should assign the tag" do
-        expect(assigns(:tag)).to eq @tag_1
-      end
+          1.upto(15) do |i|
+            @account.transactions << FactoryGirl.create(:transaction, description: "Transaction ##{i}", transaction_date: i.days.ago, amount: 10, tag: @tag)
+          end
 
-      it "should assign transactions with the ones tagged" do
-        expect(assigns(:transactions)).to match_array([@t1, @t3])
+          1.upto(5) do |i|
+            @account.transactions << FactoryGirl.create(:transaction, description: "Other Transaction ##{i}", transaction_date: i.days.ago, amount: 20, tag: @other_tag)
+          end
+        end
+
+        it "should grab the first 10 transactions on page 1" do
+          get :tagged, account_id: @account, tag_id: @tag, page: 1
+
+          expect(assigns(:transactions).size).to eq 10
+          expect(assigns(:transactions).map(&:description)).to include("Transaction #1", "Transaction #10")
+          expect(assigns(:transactions).map(&:description)).to_not include("Transaction #11", "Transaction #15", "Other Transaction #1", "Other Transaction #5")
+        end
+
+        it "should set the running to the starting balance on page 1" do
+          get :tagged, account_id: @account, tag_id: @tag, page: 1
+
+          expect(assigns(:running_total)).to eq 0
+        end
+
+        it "should grab the last 5 transactions on page 2" do
+          get :tagged, account_id: @account, tag_id: @tag, page: 2
+
+          expect(assigns(:transactions).size).to eq 5
+          expect(assigns(:transactions).map(&:description)).to_not include("Transaction #1", "Transaction #10", "Other Transaction #1", "Other Transaction #5")
+          expect(assigns(:transactions).map(&:description)).to include("Transaction #11", "Transaction #15")
+        end
+
+        it "should set the running total on page 2" do
+          get :tagged, account_id: @account, tag_id: @tag, page: 2
+
+          expect(assigns(:running_total)).to eq 100
+        end
       end
     end
 
     context "using someone else's tag" do
       before do
-        @account = FactoryGirl.create(:account, user: @user)
 
         other_tag = FactoryGirl.create(:tag)
 

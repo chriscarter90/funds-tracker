@@ -90,8 +90,9 @@ feature "Tagging transactions", %q{
     expect(page).to have_table_columns(["Transaction date", "Description",  "Amount", "Running total", "Actions"])
 
     expect(page).to have_table_rows_in_order(
+      ["", "Running total", "", "£0.00", ""],
       ["3rd January 2014", "Water #1", "£40.00", "£40.00", "Edit Delete"],
-      ["", "Total", "", "£40.00", ""]
+      ["", "Running total", "", "£40.00", ""]
     )
 
     visit account_transactions_path(account)
@@ -111,9 +112,10 @@ feature "Tagging transactions", %q{
     expect(page).to have_content("Transactions tagged with Food")
 
     expect(page).to have_table_rows_in_order(
+      ["", "Running total", "", "£0.00", ""],
       ["2nd January 2014", "Food #2", "£30.00", "£30.00", "Edit Delete"],
       ["1st January 2014", "Food #1", "£20.00", "£50.00", "Edit Delete"],
-      ["", "Total", "", "£50.00", ""]
+      ["", "Running total", "", "£50.00", ""]
     )
 
     visit tagged_account_transactions_path(account, other_tag)
@@ -124,6 +126,60 @@ feature "Tagging transactions", %q{
     expect(page).to have_content("No transactions tagged with Other found.")
     expect(page).to have_content("Try adding one here.")
     expect(page).to have_link("here", href: new_account_transaction_path(account))
+  end
+
+  scenario "Viewing tagged transactions for a single account with pagination" do
+    user = FactoryGirl.create(:user)
+    sign_in_as user
+
+    a_tag = FactoryGirl.create(:tag, name: "Stuff", user: user)
+
+    account = FactoryGirl.create(:account, user: user)
+
+    1.upto(15) do |i|
+      account.transactions << FactoryGirl.create(:transaction, description: "Transaction on day #{i}.", transaction_date: "#{i}-05-2014", amount: 10, tag: a_tag)
+    end
+
+    visit tagged_account_transactions_path(account, a_tag)
+
+    expect(page).to have_table_rows_in_order(
+      ["", "Running total", "", "£0.00", ""],
+      ["15th May 2014", "Transaction on day 15.", "£10.00", "£10.00", "Edit Delete"],
+      ["14th May 2014", "Transaction on day 14.", "£10.00", "£20.00", "Edit Delete"],
+      ["13th May 2014", "Transaction on day 13.", "£10.00", "£30.00", "Edit Delete"],
+      ["12th May 2014", "Transaction on day 12.", "£10.00", "£40.00", "Edit Delete"],
+      ["11th May 2014", "Transaction on day 11.", "£10.00", "£50.00", "Edit Delete"],
+      ["10th May 2014", "Transaction on day 10.", "£10.00", "£60.00", "Edit Delete"],
+      ["9th May 2014", "Transaction on day 9.", "£10.00", "£70.00", "Edit Delete"],
+      ["8th May 2014", "Transaction on day 8.", "£10.00", "£80.00", "Edit Delete"],
+      ["7th May 2014", "Transaction on day 7.", "£10.00", "£90.00", "Edit Delete"],
+      ["6th May 2014", "Transaction on day 6.", "£10.00", "£100.00", "Edit Delete"],
+      ["", "Running total", "", "£100.00", ""]
+    )
+
+    within '.pagination' do
+      expect(page).to have_link("2", href: tagged_account_transactions_path(account, a_tag, page: 2))
+      expect(page).to have_link("Next")
+      expect(page).to have_link("Last")
+    end
+
+    click_link "Next"
+
+    expect(page).to have_table_rows_in_order(
+      ["", "Running total", "", "£100.00", ""],
+      ["5th May 2014", "Transaction on day 5.", "£10.00", "£110.00", "Edit Delete"],
+      ["4th May 2014", "Transaction on day 4.", "£10.00", "£120.00", "Edit Delete"],
+      ["3rd May 2014", "Transaction on day 3.", "£10.00", "£130.00", "Edit Delete"],
+      ["2nd May 2014", "Transaction on day 2.", "£10.00", "£140.00", "Edit Delete"],
+      ["1st May 2014", "Transaction on day 1.", "£10.00", "£150.00", "Edit Delete"],
+      ["", "Running total", "", "£150.00", ""]
+    )
+
+    within '.pagination' do
+      expect(page).to have_link("First")
+      expect(page).to have_link("Prev")
+      expect(page).to have_link("1", href: tagged_account_transactions_path(account, a_tag))
+    end
   end
 
   scenario "Viewing tagged transaction across all accounts" do
