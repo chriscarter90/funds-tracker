@@ -72,18 +72,25 @@ feature "Transactions", %q{
 
       scenario "Viewing a list of transactions with pagination" do
         1.upto(15) do |i|
-          @account.transactions << FactoryGirl.create(:transaction, description: "Transaction #{i}.", transaction_date: i.days.ago)
+          @account.transactions << FactoryGirl.create(:transaction, description: "Transaction on day #{i}.", transaction_date: "#{i}-05-2014", amount: 10)
         end
 
         visit account_transactions_path(@account)
 
-        1.upto(10) do |j|
-          expect(page).to have_content("Transaction #{j}.")
-        end
-
-        11.upto(15) do |j|
-          expect(page).to_not have_content("Transaction #{j}.")
-        end
+        expect(page).to have_table_rows_in_order(
+          ["", "Starting balance", "", "", "£123.45", ""],
+          ["15th May 2014", "Transaction on day 15.", "", "£10.00", "£133.45", "Edit Delete"],
+          ["14th May 2014", "Transaction on day 14.", "", "£10.00", "£143.45", "Edit Delete"],
+          ["13th May 2014", "Transaction on day 13.", "", "£10.00", "£153.45", "Edit Delete"],
+          ["12th May 2014", "Transaction on day 12.", "", "£10.00", "£163.45", "Edit Delete"],
+          ["11th May 2014", "Transaction on day 11.", "", "£10.00", "£173.45", "Edit Delete"],
+          ["10th May 2014", "Transaction on day 10.", "", "£10.00", "£183.45", "Edit Delete"],
+          ["9th May 2014", "Transaction on day 9.", "", "£10.00", "£193.45", "Edit Delete"],
+          ["8th May 2014", "Transaction on day 8.", "", "£10.00", "£203.45", "Edit Delete"],
+          ["7th May 2014", "Transaction on day 7.", "", "£10.00", "£213.45", "Edit Delete"],
+          ["6th May 2014", "Transaction on day 6.", "", "£10.00", "£223.45", "Edit Delete"],
+          ["", "Current balance", "", "", "£223.45", ""]
+        )
 
         within '.pagination' do
           expect(page).to have_link("2", href: account_transactions_path(@account, page: 2))
@@ -93,13 +100,15 @@ feature "Transactions", %q{
 
         click_link "Next"
 
-        1.upto(10) do |j|
-          expect(page).to_not have_content("Transaction #{j}.")
-        end
-
-        11.upto(15) do |j|
-          expect(page).to have_content("Transaction #{j}.")
-        end
+        expect(page).to have_table_rows_in_order(
+          ["", "Starting balance", "", "", "£223.45", ""],
+          ["5th May 2014", "Transaction on day 5.", "", "£10.00", "£233.45", "Edit Delete"],
+          ["4th May 2014", "Transaction on day 4.", "", "£10.00", "£243.45", "Edit Delete"],
+          ["3rd May 2014", "Transaction on day 3.", "", "£10.00", "£253.45", "Edit Delete"],
+          ["2nd May 2014", "Transaction on day 2.", "", "£10.00", "£263.45", "Edit Delete"],
+          ["1st May 2014", "Transaction on day 1.", "", "£10.00", "£273.45", "Edit Delete"],
+          ["", "Current balance", "", "", "£273.45", ""]
+        )
 
         within '.pagination' do
           expect(page).to have_link("First")

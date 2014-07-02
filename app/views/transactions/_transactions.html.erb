@@ -1,4 +1,4 @@
-<% @transactions.inject(@account.starting_balance) do |total, transaction| %>
+<% @transactions.inject(@running_total) do |total, transaction| %>
   <tr>
     <td>
       <%= format_date(transaction.transaction_date, :longer) %>
@@ -24,3 +24,15 @@
   </tr>
   <%- total + transaction.amount %>
 <% end %>
+<tr>
+  <td></td>
+  <td>
+    <strong>Current balance</strong>
+  </td>
+  <td></td>
+  <td></td>
+  <td>
+    <strong><%= as_currency(@running_total + @transactions.pluck(:amount).sum) %></strong>
+  </td>
+  <td></td>
+</tr>

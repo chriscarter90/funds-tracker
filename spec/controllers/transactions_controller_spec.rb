@@ -15,36 +15,78 @@ describe TransactionsController, "GET #index" do
 
   context "As a logged in user" do
     before do
-      user = FactoryGirl.create(:user)
-      sign_in user
+      @user = FactoryGirl.create(:user)
+      sign_in @user
 
-      @account = FactoryGirl.create(:account, user: user)
-
-      @tag_1 = FactoryGirl.create(:tag, user: user)
-      @tag_2 = FactoryGirl.create(:tag, user: user)
-
-      @account.transactions << [FactoryGirl.create(:transaction, description: "Transaction #1", transaction_date: 5.days.ago, tag: @tag_1),
-                                FactoryGirl.create(:transaction, description: "Transaction #3", transaction_date: 5.weeks.ago, tag: @tag_2),
-                                FactoryGirl.create(:transaction, description: "Transaction #2", transaction_date: 3.days.ago, tag: @tag_1)]
-
-      get :index, account_id: @account
+      @account = FactoryGirl.create(:account, user: @user)
     end
 
-    it "assigns the account" do
-      expect(assigns(:account)).to eq @account
+    context "with less than a page" do
+      before do
+        @tag_1 = FactoryGirl.create(:tag, user: @user)
+        @tag_2 = FactoryGirl.create(:tag, user: @user)
+
+        @account.transactions << [FactoryGirl.create(:transaction, description: "Transaction #1", transaction_date: 5.days.ago, tag: @tag_1),
+                                  FactoryGirl.create(:transaction, description: "Transaction #3", transaction_date: 5.weeks.ago, tag: @tag_2),
+                                  FactoryGirl.create(:transaction, description: "Transaction #2", transaction_date: 3.days.ago, tag: @tag_1)]
+
+        get :index, account_id: @account
+      end
+
+      it "assigns the account" do
+        expect(assigns(:account)).to eq @account
+      end
+
+      it "assigns the transactions" do
+        expect(assigns(:transactions).size).to eq 3
+        expect(assigns(:transactions).map(&:description)).to eq ["Transaction #2", "Transaction #1", "Transaction #3"]
+      end
+
+      it "assigns the tags" do
+        expect(assigns(:tags)).to match_array [@tag_1, @tag_2]
+      end
+
+      it "renders index" do
+        expect(response).to render_template :index
+      end
     end
 
-    it "assigns the transactions" do
-      expect(assigns(:transactions).size).to eq 3
-      expect(assigns(:transactions).map(&:description)).to eq ["Transaction #2", "Transaction #1", "Transaction #3"]
-    end
+    context "with more than a page" do
+      before do
+        @account.update_attributes(starting_balance: 100)
 
-    it "assigns the tags" do
-      expect(assigns(:tags)).to match_array [@tag_1, @tag_2]
-    end
+        1.upto(15) do |i|
+          @account.transactions << FactoryGirl.create(:transaction, description: "Transaction ##{i}", transaction_date: i.days.ago, amount: 10)
+        end
+      end
 
-    it "renders show" do
-      expect(response).to render_template :index
+      it "should grab the first 10 transactions on page 1" do
+        get :index, account_id: @account, page: 1
+
+        expect(assigns(:transactions).size).to eq 10
+        expect(assigns(:transactions).map(&:description)).to include("Transaction #1", "Transaction #10")
+        expect(assigns(:transactions).map(&:description)).to_not include("Transaction #11", "Transaction #15")
+      end
+
+      it "should set the running total to the starting balance on page 1" do
+        get :index, account_id: @account, page: 1
+
+        expect(assigns(:running_total)).to eq 100
+      end
+
+      it "should grab the last 5 transactions on page 2" do
+        get :index, account_id: @account, page: 2
+
+        expect(assigns(:transactions).size).to eq 5
+        expect(assigns(:transactions).map(&:description)).to_not include("Transaction #1", "Transaction #10")
+        expect(assigns(:transactions).map(&:description)).to include("Transaction #11", "Transaction #15")
+      end
+
+      it "should set the running total on page 2" do
+        get :index, account_id: @account, page: 2
+
+        expect(assigns(:running_total)).to eq 200
+      end
     end
   end
 end

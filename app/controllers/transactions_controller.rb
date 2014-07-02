@@ -5,7 +5,14 @@ class TransactionsController < ApplicationController
   before_action :find_tag, only: [:tagged]
 
   def index
-    @transactions = @account.transactions.newest_first.page(params[:page]).per(10)
+    params[:page] ||= 1
+    per_page = 10
+
+    @transactions = @account.transactions.newest_first.page(params[:page]).per(per_page)
+    past_sum = @account.transactions.newest_first.limit((params[:page].to_i - 1) * per_page).pluck(:amount).sum
+
+    @running_total = @account.starting_balance + past_sum
+
     @tags = current_user.tags
   end
 

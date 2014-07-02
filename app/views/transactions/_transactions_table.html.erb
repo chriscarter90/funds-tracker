@@ -18,22 +18,10 @@
       <td></td>
       <td></td>
       <td>
-        <strong><%= as_currency(@account.starting_balance) %></strong>
+        <strong><%= as_currency(@running_total) %></strong>
       </td>
       <td></td>
     </tr>
     <%= render 'transactions' %>
-    <tr>
-      <td></td>
-      <td>
-        <strong>Current balance</strong>
-      </td>
-      <td></td>
-      <td></td>
-      <td>
-        <strong><%= as_currency(@account.current_balance) %></strong>
-      </td>
-      <td></td>
-    </tr>
   </tbody>
 </table>
