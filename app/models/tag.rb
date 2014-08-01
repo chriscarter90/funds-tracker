@@ -6,4 +6,6 @@ class Tag < ActiveRecord::Base
   has_many :transactions, dependent: :nullify
   belongs_to :user
 
+  scope :by_name, -> { order(name: :asc) }
+
 end

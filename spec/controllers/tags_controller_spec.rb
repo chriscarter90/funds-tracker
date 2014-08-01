@@ -16,13 +16,15 @@ describe TagsController, "GET #index" do
       user = FactoryGirl.create(:user)
       sign_in user
 
-      user.tags = FactoryGirl.create_list(:tag, 6, user: user)
+      @b = FactoryGirl.create(:tag, name: 'b', user: user)
+      @c = FactoryGirl.create(:tag, name: 'c', user: user)
+      @a = FactoryGirl.create(:tag, name: 'a', user: user)
 
       get :index
     end
 
     it "assigns their tags" do
-      expect(assigns(:tags).size).to eq 6
+      expect(assigns(:tags)).to eq [@a, @b, @c]
     end
   end
 end

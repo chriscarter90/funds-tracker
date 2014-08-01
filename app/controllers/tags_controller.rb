@@ -3,7 +3,7 @@ class TagsController < ApplicationController
   before_action :find_tag, only: [:edit, :update, :destroy]
 
   def index
-    @tags = current_user.tags
+    @tags = current_user.tags.by_name
   end
 
   def new
