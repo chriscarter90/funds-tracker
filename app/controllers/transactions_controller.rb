@@ -9,9 +9,11 @@ class TransactionsController < ApplicationController
     per_page = 10
 
     @transactions = @account.transactions.newest_first.page(params[:page]).per(per_page)
-    past_sum = @account.transactions.newest_first.limit((params[:page].to_i - 1) * per_page).pluck(:amount).sum
 
-    @running_total = @account.starting_balance + past_sum
+    if @transactions.any?
+      @starting_amount = @account.starting_balance + @account.transactions.newest_first.before(@transactions.last).sum(:amount)
+      @ending_amount = @starting_amount + @transactions.pluck(:amount).sum # Why doesn't sum(:amount) work here?
+    end
 
     @tags = current_user.tags
   end
@@ -54,9 +56,11 @@ class TransactionsController < ApplicationController
     per_page = 10
 
     @transactions = @account.transactions.tagged_with(@tag).newest_first.page(params[:page]).per(per_page)
-    past_sum = @account.transactions.tagged_with(@tag).newest_first.limit((params[:page].to_i - 1) * per_page).pluck(:amount).sum
 
-    @running_total = past_sum
+    if @transactions.any?
+      @starting_amount = @account.transactions.tagged_with(@tag).newest_first.before(@transactions.last).sum(:amount)
+      @ending_amount = @starting_amount + @transactions.pluck(:amount).sum
+    end
   end
 
   protected

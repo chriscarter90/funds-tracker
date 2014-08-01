@@ -28,9 +28,9 @@ feature "Tagging transactions", %q{
     expect(page).to have_content("Transaction successfully updated.")
 
     expect(page).to have_table_rows_in_order(
-      ["", "Starting balance", "", "", "£10.00", ""],
+      ["", "Ending balance", "", "", "£30.00", ""],
       ["1st January 2014", "A Transaction", "Food", "£20.00", "£30.00", "Edit Delete"],
-      ["", "Current balance", "", "", "£30.00", ""]
+      ["", "Starting balance", "", "", "£10.00", ""]
     )
 
     click_link "Edit"
@@ -42,9 +42,9 @@ feature "Tagging transactions", %q{
     expect(current_path).to eq account_transactions_path(account)
 
     expect(page).to have_table_rows_in_order(
-      ["", "Starting balance", "", "", "£10.00", ""],
+      ["", "Ending balance", "", "", "£30.00", ""],
       ["1st January 2014", "A Transaction", "", "£20.00", "£30.00", "Edit Delete"],
-      ["", "Current balance", "", "", "£30.00", ""]
+      ["", "Starting balance", "", "", "£10.00", ""]
     )
   end
 
@@ -66,11 +66,11 @@ feature "Tagging transactions", %q{
     visit account_transactions_path(account)
 
     expect(page).to have_table_rows_in_order(
-      ["", "Starting balance", "", "", "£10.00", ""],
-      ["3rd January 2014", "Water #1", "Water", "£40.00", "£50.00", "Edit Delete"],
-      ["2nd January 2014", "Food #2", "Food", "£30.00", "£80.00", "Edit Delete"],
-      ["1st January 2014", "Food #1", "Food", "£20.00", "£100.00", "Edit Delete"],
-      ["", "Current balance", "", "", "£100.00", ""]
+      ["", "Ending balance", "", "", "£100.00", ""],
+      ["3rd January 2014", "Water #1", "Water", "£40.00", "£100.00", "Edit Delete"],
+      ["2nd January 2014", "Food #2", "Food", "£30.00", "£60.00", "Edit Delete"],
+      ["1st January 2014", "Food #1", "Food", "£20.00", "£30.00", "Edit Delete"],
+      ["", "Starting balance", "", "", "£10.00", ""]
     )
 
     within "tr:nth-child(2)" do
@@ -90,9 +90,9 @@ feature "Tagging transactions", %q{
     expect(page).to have_table_columns(["Transaction date", "Description",  "Amount", "Running total", "Actions"])
 
     expect(page).to have_table_rows_in_order(
-      ["", "Running total", "", "£0.00", ""],
+      ["", "Ending balance", "", "£40.00", ""],
       ["3rd January 2014", "Water #1", "£40.00", "£40.00", "Edit Delete"],
-      ["", "Running total", "", "£40.00", ""]
+      ["", "Starting balance", "", "£0.00", ""]
     )
 
     visit account_transactions_path(account)
@@ -112,10 +112,10 @@ feature "Tagging transactions", %q{
     expect(page).to have_content("Transactions tagged with Food")
 
     expect(page).to have_table_rows_in_order(
-      ["", "Running total", "", "£0.00", ""],
-      ["2nd January 2014", "Food #2", "£30.00", "£30.00", "Edit Delete"],
-      ["1st January 2014", "Food #1", "£20.00", "£50.00", "Edit Delete"],
-      ["", "Running total", "", "£50.00", ""]
+      ["", "Ending balance", "", "£50.00", ""],
+      ["2nd January 2014", "Food #2", "£30.00", "£50.00", "Edit Delete"],
+      ["1st January 2014", "Food #1", "£20.00", "£20.00", "Edit Delete"],
+      ["", "Starting balance", "", "£0.00", ""]
     )
 
     visit tagged_account_transactions_path(account, other_tag)
@@ -143,18 +143,18 @@ feature "Tagging transactions", %q{
     visit tagged_account_transactions_path(account, a_tag)
 
     expect(page).to have_table_rows_in_order(
-      ["", "Running total", "", "£0.00", ""],
-      ["15th May 2014", "Transaction on day 15.", "£10.00", "£10.00", "Edit Delete"],
-      ["14th May 2014", "Transaction on day 14.", "£10.00", "£20.00", "Edit Delete"],
-      ["13th May 2014", "Transaction on day 13.", "£10.00", "£30.00", "Edit Delete"],
-      ["12th May 2014", "Transaction on day 12.", "£10.00", "£40.00", "Edit Delete"],
-      ["11th May 2014", "Transaction on day 11.", "£10.00", "£50.00", "Edit Delete"],
-      ["10th May 2014", "Transaction on day 10.", "£10.00", "£60.00", "Edit Delete"],
-      ["9th May 2014", "Transaction on day 9.", "£10.00", "£70.00", "Edit Delete"],
+      ["", "Ending balance", "", "£150.00", ""],
+      ["15th May 2014", "Transaction on day 15.", "£10.00", "£150.00", "Edit Delete"],
+      ["14th May 2014", "Transaction on day 14.", "£10.00", "£140.00", "Edit Delete"],
+      ["13th May 2014", "Transaction on day 13.", "£10.00", "£130.00", "Edit Delete"],
+      ["12th May 2014", "Transaction on day 12.", "£10.00", "£120.00", "Edit Delete"],
+      ["11th May 2014", "Transaction on day 11.", "£10.00", "£110.00", "Edit Delete"],
+      ["10th May 2014", "Transaction on day 10.", "£10.00", "£100.00", "Edit Delete"],
+      ["9th May 2014", "Transaction on day 9.", "£10.00", "£90.00", "Edit Delete"],
       ["8th May 2014", "Transaction on day 8.", "£10.00", "£80.00", "Edit Delete"],
-      ["7th May 2014", "Transaction on day 7.", "£10.00", "£90.00", "Edit Delete"],
-      ["6th May 2014", "Transaction on day 6.", "£10.00", "£100.00", "Edit Delete"],
-      ["", "Running total", "", "£100.00", ""]
+      ["7th May 2014", "Transaction on day 7.", "£10.00", "£70.00", "Edit Delete"],
+      ["6th May 2014", "Transaction on day 6.", "£10.00", "£60.00", "Edit Delete"],
+      ["", "Starting balance", "", "£50.00", ""]
     )
 
     within '.pagination' do
@@ -166,13 +166,13 @@ feature "Tagging transactions", %q{
     click_link "Next"
 
     expect(page).to have_table_rows_in_order(
-      ["", "Running total", "", "£100.00", ""],
-      ["5th May 2014", "Transaction on day 5.", "£10.00", "£110.00", "Edit Delete"],
-      ["4th May 2014", "Transaction on day 4.", "£10.00", "£120.00", "Edit Delete"],
-      ["3rd May 2014", "Transaction on day 3.", "£10.00", "£130.00", "Edit Delete"],
-      ["2nd May 2014", "Transaction on day 2.", "£10.00", "£140.00", "Edit Delete"],
-      ["1st May 2014", "Transaction on day 1.", "£10.00", "£150.00", "Edit Delete"],
-      ["", "Running total", "", "£150.00", ""]
+      ["", "Ending balance", "", "£50.00", ""],
+      ["5th May 2014", "Transaction on day 5.", "£10.00", "£50.00", "Edit Delete"],
+      ["4th May 2014", "Transaction on day 4.", "£10.00", "£40.00", "Edit Delete"],
+      ["3rd May 2014", "Transaction on day 3.", "£10.00", "£30.00", "Edit Delete"],
+      ["2nd May 2014", "Transaction on day 2.", "£10.00", "£20.00", "Edit Delete"],
+      ["1st May 2014", "Transaction on day 1.", "£10.00", "£10.00", "Edit Delete"],
+      ["", "Starting balance", "", "£0.00", ""]
     )
 
     within '.pagination' do
@@ -218,10 +218,11 @@ feature "Tagging transactions", %q{
     expect(page).to have_table_columns(["Transaction date", "Description", "Account", "Amount", "Running total", "Actions"])
 
     expect(page).to have_table_rows_in_order(
-      ["7th January 2014", "Food #3", "Account #2", "£50.00", "£50.00", "Edit Delete"],
-      ["2nd January 2014", "Food #2", "Account #1", "£30.00", "£80.00", "Edit Delete"],
-      ["1st January 2014", "Food #1", "Account #1", "£20.00", "£100.00", "Edit Delete"],
-      ["", "Total", "", "", "£100.00", ""]
+      ["", "Ending balance", "", "", "£100.00", ""],
+      ["7th January 2014", "Food #3", "Account #2", "£50.00", "£100.00", "Edit Delete"],
+      ["2nd January 2014", "Food #2", "Account #1", "£30.00", "£50.00", "Edit Delete"],
+      ["1st January 2014", "Food #1", "Account #1", "£20.00", "£20.00", "Edit Delete"],
+      ["", "Starting balance", "", "", "£0.00", ""]
     )
 
     visit accounts_path
@@ -237,9 +238,10 @@ feature "Tagging transactions", %q{
     expect(page).to have_content("Transactions tagged with Water")
 
     expect(page).to have_table_rows_in_order(
-      ["8th January 2014", "Water #2", "Account #2", "£45.00", "£45.00", "Edit Delete"],
-      ["3rd January 2014", "Water #1", "Account #1", "£40.00", "£85.00", "Edit Delete"],
-      ["", "Total", "", "", "£85.00", ""]
+      ["", "Ending balance", "", "", "£85.00", ""],
+      ["8th January 2014", "Water #2", "Account #2", "£45.00", "£85.00", "Edit Delete"],
+      ["3rd January 2014", "Water #1", "Account #1", "£40.00", "£40.00", "Edit Delete"],
+      ["", "Starting balance", "", "", "£0.00", ""]
     )
 
     expect(page).to have_link("Account #1", href: account_transactions_path(account_1))

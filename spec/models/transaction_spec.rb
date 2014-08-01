@@ -20,11 +20,44 @@ end
 describe Transaction, "scopes" do
   describe ".newest_first" do
     it "should return them with the newest transaction first" do
-      @t1 = FactoryGirl.create(:transaction, transaction_date: 4.days.ago)
-      @t2 = FactoryGirl.create(:transaction, transaction_date: 2.days.ago)
-      @t3 = FactoryGirl.create(:transaction, transaction_date: 6.days.ago)
+      t1 = FactoryGirl.create(:transaction, transaction_date: 4.days.ago)
+      t2 = FactoryGirl.create(:transaction, transaction_date: 2.days.ago)
+      t3 = FactoryGirl.create(:transaction, transaction_date: 6.days.ago)
 
-      expect(Transaction.newest_first).to eq [@t2, @t1, @t3]
+      expect(Transaction.newest_first).to eq [t2, t1, t3]
+    end
+
+    it "should return them with the highest ID first if sharing a date" do
+      t1 = FactoryGirl.create(:transaction, transaction_date: 4.days.ago, id: 64)
+      t2 = FactoryGirl.create(:transaction, transaction_date: 4.days.ago, id: 67)
+      t3 = FactoryGirl.create(:transaction, transaction_date: 4.days.ago, id: 54)
+      t4 = FactoryGirl.create(:transaction, transaction_date: 3.days.ago)
+
+      expect(Transaction.newest_first).to eq [t4, t2, t1, t3]
+    end
+  end
+
+  describe ".before" do
+    it "should return transactions with a date before the given one" do
+      t = FactoryGirl.create(:transaction, transaction_date: 3.days.ago)
+
+      t1 = FactoryGirl.create(:transaction, transaction_date: 1.days.ago)
+      t2 = FactoryGirl.create(:transaction, transaction_date: 5.days.ago)
+      t3 = FactoryGirl.create(:transaction, transaction_date: 2.days.ago)
+      t4 = FactoryGirl.create(:transaction, transaction_date: 4.days.ago)
+
+      expect(Transaction.before(t)).to match_array [t4, t2]
+    end
+
+    it "should also return those with a lower ID if the dates match" do
+      t = FactoryGirl.create(:transaction, transaction_date: 3.days.ago, id: 55)
+
+      t1 = FactoryGirl.create(:transaction, transaction_date: 3.days.ago, id: 56)
+      t2 = FactoryGirl.create(:transaction, transaction_date: 3.days.ago, id: 54) # Lower ID
+      t3 = FactoryGirl.create(:transaction, transaction_date: 1.days.ago)
+      t4 = FactoryGirl.create(:transaction, transaction_date: 5.days.ago)         # Older
+
+      expect(Transaction.before(t)).to match_array [t4, t2]
     end
   end
 

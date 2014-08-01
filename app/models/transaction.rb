@@ -9,7 +9,8 @@ class Transaction < ActiveRecord::Base
   belongs_to :account
   belongs_to :tag
 
-  scope :newest_first, -> { order(transaction_date: :desc) }
+  scope :newest_first, -> { order(transaction_date: :desc, id: :desc) }
+  scope :before, ->(t) { where("transaction_date < ? OR transaction_date = ? AND id < ?", t.transaction_date, t.transaction_date, t.id) }
   scope :tagged_with, ->(tag) { where(tag_id: tag)  }
 
   def update_account_balance

@@ -68,10 +68,16 @@ describe TransactionsController, "GET #index" do
         expect(assigns(:transactions).map(&:description)).to_not include("Transaction #11", "Transaction #15")
       end
 
-      it "should set the running total to the starting balance on page 1" do
+      it "should set the ending amount to the current account balance" do
         get :index, account_id: @account, page: 1
 
-        expect(assigns(:running_total)).to eq 100
+        expect(assigns(:ending_amount)).to eq 250
+      end
+
+      it "should set the starting amount for page 1" do
+        get :index, account_id: @account, page: 1
+
+        expect(assigns(:starting_amount)).to eq 150
       end
 
       it "should grab the last 5 transactions on page 2" do
@@ -82,10 +88,16 @@ describe TransactionsController, "GET #index" do
         expect(assigns(:transactions).map(&:description)).to include("Transaction #11", "Transaction #15")
       end
 
-      it "should set the running total on page 2" do
+      it "should set the ending amount on page 2" do
         get :index, account_id: @account, page: 2
 
-        expect(assigns(:running_total)).to eq 200
+        expect(assigns(:ending_amount)).to eq 150
+      end
+
+      it "should set the starting amount to the starting account balance" do
+        get :index, account_id: @account, page: 2
+
+        expect(assigns(:starting_amount)).to eq 100
       end
     end
   end
@@ -524,10 +536,16 @@ describe TransactionsController, "GET #tagged" do
           expect(assigns(:transactions).map(&:description)).to_not include("Transaction #11", "Transaction #15", "Other Transaction #1", "Other Transaction #5")
         end
 
-        it "should set the running to the starting balance on page 1" do
+        it "should set the ending amount on page 1" do
           get :tagged, account_id: @account, tag_id: @tag, page: 1
 
-          expect(assigns(:running_total)).to eq 0
+          expect(assigns(:ending_amount)).to eq 150
+        end
+
+        it "should set the starting amount on page 1" do
+          get :tagged, account_id: @account, tag_id: @tag, page: 1
+
+          expect(assigns(:starting_amount)).to eq 50
         end
 
         it "should grab the last 5 transactions on page 2" do
@@ -538,17 +556,22 @@ describe TransactionsController, "GET #tagged" do
           expect(assigns(:transactions).map(&:description)).to include("Transaction #11", "Transaction #15")
         end
 
-        it "should set the running total on page 2" do
+        it "should set the ending amount on page 2" do
           get :tagged, account_id: @account, tag_id: @tag, page: 2
 
-          expect(assigns(:running_total)).to eq 100
+          expect(assigns(:ending_amount)).to eq 50
+        end
+
+        it "should set the starting amount to zero on page 2" do
+          get :tagged, account_id: @account, tag_id: @tag, page: 2
+
+          expect(assigns(:starting_amount)).to eq 0
         end
       end
     end
 
     context "using someone else's tag" do
       before do
-
         other_tag = FactoryGirl.create(:tag)
 
         get :tagged, account_id: @account, tag_id: other_tag

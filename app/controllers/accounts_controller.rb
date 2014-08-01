@@ -43,6 +43,11 @@ class AccountsController < ApplicationController
 
   def tagged
     @transactions = current_user.transactions.tagged_with(@tag)
+
+    if @transactions.any?
+      @starting_amount = 0
+      @ending_amount = @starting_amount + @transactions.pluck(:amount).sum
+    end
   end
 
   protected

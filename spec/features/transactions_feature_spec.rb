@@ -8,6 +8,7 @@ feature "Transactions", %q{
     before do
       @account = FactoryGirl.create(:account)
     end
+
     scenario "Trying to view transactions for an account" do
       visit account_transactions_path(@account)
 
@@ -63,10 +64,10 @@ feature "Transactions", %q{
         expect(page).to have_table_columns(["Transaction date", "Description", "Tagged with...", "Amount", "Running total", "Actions"])
 
         expect(page).to have_table_rows_in_order(
-          ["", "Starting balance", "", "", "£123.45", ""],
-          ["4th May 2014", "Another Transaction", "", "£12.34", "£135.79", "Edit Delete"],
-          ["1st May 2014", "Example Transaction", "", "£30.48", "£166.27", "Edit Delete"],
-          ["", "Current balance", "", "", "£166.27", ""]
+          ["", "Ending balance", "", "", "£166.27", ""],
+          ["4th May 2014", "Another Transaction", "", "£12.34", "£166.27", "Edit Delete"],
+          ["1st May 2014", "Example Transaction", "", "£30.48", "£153.93", "Edit Delete"],
+          ["", "Starting balance", "", "", "£123.45", ""]
         )
       end
 
@@ -78,18 +79,18 @@ feature "Transactions", %q{
         visit account_transactions_path(@account)
 
         expect(page).to have_table_rows_in_order(
-          ["", "Starting balance", "", "", "£123.45", ""],
-          ["15th May 2014", "Transaction on day 15.", "", "£10.00", "£133.45", "Edit Delete"],
-          ["14th May 2014", "Transaction on day 14.", "", "£10.00", "£143.45", "Edit Delete"],
-          ["13th May 2014", "Transaction on day 13.", "", "£10.00", "£153.45", "Edit Delete"],
-          ["12th May 2014", "Transaction on day 12.", "", "£10.00", "£163.45", "Edit Delete"],
-          ["11th May 2014", "Transaction on day 11.", "", "£10.00", "£173.45", "Edit Delete"],
-          ["10th May 2014", "Transaction on day 10.", "", "£10.00", "£183.45", "Edit Delete"],
-          ["9th May 2014", "Transaction on day 9.", "", "£10.00", "£193.45", "Edit Delete"],
+          ["", "Ending balance", "", "", "£273.45", ""],
+          ["15th May 2014", "Transaction on day 15.", "", "£10.00", "£273.45", "Edit Delete"],
+          ["14th May 2014", "Transaction on day 14.", "", "£10.00", "£263.45", "Edit Delete"],
+          ["13th May 2014", "Transaction on day 13.", "", "£10.00", "£253.45", "Edit Delete"],
+          ["12th May 2014", "Transaction on day 12.", "", "£10.00", "£243.45", "Edit Delete"],
+          ["11th May 2014", "Transaction on day 11.", "", "£10.00", "£233.45", "Edit Delete"],
+          ["10th May 2014", "Transaction on day 10.", "", "£10.00", "£223.45", "Edit Delete"],
+          ["9th May 2014", "Transaction on day 9.", "", "£10.00", "£213.45", "Edit Delete"],
           ["8th May 2014", "Transaction on day 8.", "", "£10.00", "£203.45", "Edit Delete"],
-          ["7th May 2014", "Transaction on day 7.", "", "£10.00", "£213.45", "Edit Delete"],
-          ["6th May 2014", "Transaction on day 6.", "", "£10.00", "£223.45", "Edit Delete"],
-          ["", "Current balance", "", "", "£223.45", ""]
+          ["7th May 2014", "Transaction on day 7.", "", "£10.00", "£193.45", "Edit Delete"],
+          ["6th May 2014", "Transaction on day 6.", "", "£10.00", "£183.45", "Edit Delete"],
+          ["", "Starting balance", "", "", "£173.45", ""]
         )
 
         within '.pagination' do
@@ -101,13 +102,13 @@ feature "Transactions", %q{
         click_link "Next"
 
         expect(page).to have_table_rows_in_order(
-          ["", "Starting balance", "", "", "£223.45", ""],
-          ["5th May 2014", "Transaction on day 5.", "", "£10.00", "£233.45", "Edit Delete"],
-          ["4th May 2014", "Transaction on day 4.", "", "£10.00", "£243.45", "Edit Delete"],
-          ["3rd May 2014", "Transaction on day 3.", "", "£10.00", "£253.45", "Edit Delete"],
-          ["2nd May 2014", "Transaction on day 2.", "", "£10.00", "£263.45", "Edit Delete"],
-          ["1st May 2014", "Transaction on day 1.", "", "£10.00", "£273.45", "Edit Delete"],
-          ["", "Current balance", "", "", "£273.45", ""]
+          ["", "Ending balance", "", "", "£173.45", ""],
+          ["5th May 2014", "Transaction on day 5.", "", "£10.00", "£173.45", "Edit Delete"],
+          ["4th May 2014", "Transaction on day 4.", "", "£10.00", "£163.45", "Edit Delete"],
+          ["3rd May 2014", "Transaction on day 3.", "", "£10.00", "£153.45", "Edit Delete"],
+          ["2nd May 2014", "Transaction on day 2.", "", "£10.00", "£143.45", "Edit Delete"],
+          ["1st May 2014", "Transaction on day 1.", "", "£10.00", "£133.45", "Edit Delete"],
+          ["", "Starting balance", "", "", "£123.45", ""]
         )
 
         within '.pagination' do
@@ -163,9 +164,9 @@ feature "Transactions", %q{
           expect(page).to have_content("Transactions")
 
           expect(page).to have_table_rows_in_order(
-            ["", "Starting balance", "", "", "£123.45", ""],
+            ["", "Ending balance", "", "", "£143.56", ""],
             ["1st January 2014", "An Example Transaction", "", "£20.11", "£143.56", "Edit Delete"],
-            ["", "Current balance", "", "", "£143.56", ""]
+            ["", "Starting balance", "", "", "£123.45", ""]
           )
         end
       end
@@ -176,9 +177,9 @@ feature "Transactions", %q{
         visit account_transactions_path(@account)
 
         expect(page).to have_table_rows_in_order(
-          ["", "Starting balance", "", "", "£123.45", ""],
+          ["", "Ending balance", "", "", "£147.45", ""],
           ["2nd January 2014", "A Transaction", "", "£24.00", "£147.45", "Edit Delete"],
-          ["", "Current balance", "", "", "£147.45", ""]
+          ["", "Starting balance", "", "", "£123.45", ""]
         )
 
         expect(page).to have_link("Edit")
@@ -209,9 +210,9 @@ feature "Transactions", %q{
         expect(page).to have_content("Transaction successfully updated.")
 
         expect(page).to have_table_rows_in_order(
-          ["", "Starting balance", "", "", "£123.45", ""],
+          ["", "Ending balance", "", "", "£182.10", ""],
           ["4th January 2014", "Edited Transaction", "", "£58.65", "£182.10", "Edit Delete"],
-          ["", "Current balance", "", "", "£182.10", ""]
+          ["", "Starting balance", "", "", "£123.45", ""]
         )
       end
 
@@ -222,10 +223,10 @@ feature "Transactions", %q{
         visit account_transactions_path(@account)
 
         expect(page).to have_table_rows_in_order(
-          ["", "Starting balance", "", "", "£123.45", ""],
-          ["9th April 2014", "A Transaction", "", "£24.00", "£147.45", "Edit Delete"],
-          ["8th April 2014", "An Old Transaction", "", "£34.00", "£181.45", "Edit Delete"],
-          ["", "Current balance", "", "", "£181.45", ""]
+          ["", "Ending balance", "", "", "£181.45", ""],
+          ["9th April 2014", "A Transaction", "", "£24.00", "£181.45", "Edit Delete"],
+          ["8th April 2014", "An Old Transaction", "", "£34.00", "£157.45", "Edit Delete"],
+          ["", "Starting balance", "", "", "£123.45", ""]
         )
 
         within 'tbody tr:nth-child(3)' do
@@ -237,9 +238,9 @@ feature "Transactions", %q{
         expect(page).to_not have_content("£34.00")
 
         expect(page).to have_table_rows_in_order(
-          ["", "Starting balance", "", "", "£123.45", ""],
+          ["", "Ending balance", "", "", "£147.45", ""],
           ["9th April 2014", "A Transaction", "", "£24.00", "£147.45", "Edit Delete"],
-          ["", "Current balance", "", "", "£147.45", ""]
+          ["", "Starting balance", "", "", "£123.45", ""]
         )
 
         expect(page).to have_content("Transaction successfully deleted.")
