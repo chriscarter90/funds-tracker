@@ -31,3 +31,15 @@ describe Account, 'callbacks' do
     end
   end
 end
+
+describe Account, 'scopes' do
+  describe 'by_name' do
+    it "should return accounts by name" do
+      a1 = FactoryGirl.create(:account, name: 'Account B')
+      a2 = FactoryGirl.create(:account, name: 'Account C')
+      a3 = FactoryGirl.create(:account, name: 'Account A')
+
+      expect(Account.by_name).to eq [a3, a1, a2]
+    end
+  end
+end

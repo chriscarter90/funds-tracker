@@ -4,8 +4,8 @@ class AccountsController < ApplicationController
   before_action :find_tag, only: [:tagged]
 
   def index
-    @accounts = current_user.accounts
-    @tags = current_user.tags
+    @accounts = current_user.accounts.by_name
+    @tags = current_user.tags.by_name
   end
 
   def new

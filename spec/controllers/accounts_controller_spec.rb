@@ -16,14 +16,17 @@ describe AccountsController, "GET #index" do
       user = FactoryGirl.create(:user)
       sign_in user
 
-      user.accounts = FactoryGirl.create_list(:account, 3, user: user)
+      @a1 = FactoryGirl.create(:account, name: "Account B", user: user)
+      @a2 = FactoryGirl.create(:account, name: "Account C", user: user)
+      @a3 = FactoryGirl.create(:account, name: "Account A", user: user)
+
       user.tags = FactoryGirl.create_list(:tag, 4, user: user)
 
       get :index
     end
 
     it "assigns their accounts" do
-      expect(assigns(:accounts).size).to eq 3
+      expect(assigns(:accounts)).to eq [@a3, @a1, @a2]
     end
 
     it "assigns their tags" do

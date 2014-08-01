@@ -8,6 +8,8 @@ class Account < ActiveRecord::Base
   belongs_to :user
   has_many :transactions, dependent: :destroy
 
+  scope :by_name, -> { order(name: :asc) }
+
   def update_balance
     if valid?
       self.current_balance = self.starting_balance + transactions.sum(:amount)
