@@ -12,7 +12,9 @@ class TransactionsController < ApplicationController
 
     if @transactions.any?
       @starting_amount = @account.starting_balance + @account.transactions.newest_first.before(@transactions.last).sum(:amount)
-      @ending_amount = @starting_amount + @transactions.pluck(:amount).sum # Why doesn't sum(:amount) work here?
+      # The following line does NOT work if you use `sum(:amount)` instead of `pluck(:amount).sum`
+      # If you use sum(:amount), then it LIMIT/OFFSETs AFTER doing the sum so returns no rows :(
+      @ending_amount = @starting_amount + @transactions.pluck(:amount).sum
     end
 
     @tags = current_user.tags
