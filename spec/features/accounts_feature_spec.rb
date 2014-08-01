@@ -58,8 +58,8 @@ feature "Accounts", %q{
       expect(page).to have_table_columns(["Name", "Actions"])
 
       expect(page).to have_table_rows_in_order(
-        ["Account #2", "Edit Delete"],
-        ["Account #1", "Edit Delete"]
+        ["Account #1", "Edit Delete"],
+        ["Account #2", "Edit Delete"]
       )
     end
 
