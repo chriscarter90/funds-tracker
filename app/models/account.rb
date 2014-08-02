@@ -16,4 +16,10 @@ class Account < ActiveRecord::Base
     end
   end
 
+  def balance_up_to(transaction)
+    sum_total = transactions.newest_first.before(transaction).sum(:amount)
+
+    self.starting_balance + sum_total
+  end
+
 end

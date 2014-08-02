@@ -43,3 +43,19 @@ describe Account, 'scopes' do
     end
   end
 end
+
+describe Account, 'methods' do
+  describe 'balance_up_to' do
+    it "should only return the starting balance plus all those transactions before the one provided" do
+      @account = FactoryGirl.create(:account, starting_balance: 100)
+
+      @t = FactoryGirl.create(:transaction, account: @account, transaction_date: 3.days.ago, amount: 10)
+
+      @account.transactions << [FactoryGirl.create(:transaction, transaction_date: 4.days.ago, amount: 50),
+                                FactoryGirl.create(:transaction, transaction_date: 2.days.ago, amount: 20),
+                                FactoryGirl.create(:transaction, transaction_date: 5.days.ago, amount: 25)]
+
+      expect(@account.balance_up_to(@t)).to eq 175
+    end
+  end
+end

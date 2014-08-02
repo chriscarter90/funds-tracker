@@ -542,7 +542,7 @@ describe TransactionsController, "GET #tagged" do
           expect(assigns(:ending_amount)).to eq 150
         end
 
-        it "should set the starting amount on page 1" do
+        it "should set the starting amount on page 2" do
           get :tagged, account_id: @account, tag_id: @tag, page: 1
 
           expect(assigns(:starting_amount)).to eq 50
