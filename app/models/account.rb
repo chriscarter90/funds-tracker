@@ -7,6 +7,8 @@ class Account < ActiveRecord::Base
 
   belongs_to :user
   has_many :transactions, dependent: :destroy
+  has_many :transfers_out, class_name: "Transfer", source: :from_account, foreign_key: "from_account_id"
+  has_many :transfers_in, class_name: "Transfer", source: :to_account, foreign_key: "to_account_id"
 
   scope :by_name, -> { order(name: :asc) }
 

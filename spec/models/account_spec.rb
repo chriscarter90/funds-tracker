@@ -10,6 +10,8 @@ end
 describe Account, 'relationships' do
   it { should belong_to :user }
   it { should have_many(:transactions).dependent(:destroy) }
+  it { should have_many(:transfers_out).class_name("Transfer").source(:from_account) }
+  it { should have_many(:transfers_in).class_name("Transfer").source(:to_account) }
 end
 
 describe Account, 'callbacks' do

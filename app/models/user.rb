@@ -9,4 +9,5 @@ class User < ActiveRecord::Base
   has_many :accounts, dependent: :destroy
   has_many :transactions, through: :accounts, dependent: :destroy
   has_many :tags, dependent: :destroy
+  has_many :transfers, through: :accounts, source: :transfers_in
 end

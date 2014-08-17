@@ -63,5 +63,6 @@ feature "Home page", %q{
     expect(page).to have_link("Sections", href: '#')
     expect(page).to have_link("Accounts", href: accounts_path)
     expect(page).to have_link("Tags", href: tags_path)
+    expect(page).to have_link("Transfers", href: transfers_path)
   end
 end

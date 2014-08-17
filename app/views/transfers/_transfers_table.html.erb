@@ -1,0 +1,28 @@
+<table class="table middle-align">
+  <thead>
+    <tr>
+      <th>Transfer date</th>
+      <th>From</th>
+      <th>To</th>
+      <th>Amount</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @transfers.each do |t| %>
+      <tr>
+        <td>
+          <%= format_date(t.transfer_date, :longer) %>
+        </td>
+        <td>
+          <%= link_to t.from_account.name, account_path(t.from_account) %>
+        </td>
+        <td>
+          <%= link_to t.to_account.name, account_path(t.to_account) %>
+        </td>
+        <td>
+          <%= as_currency(t.amount) %>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
