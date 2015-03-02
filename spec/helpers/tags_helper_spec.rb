@@ -1,4 +1,4 @@
-require 'spec_helper'
+require 'rails_helper'
 
 describe TagsHelper, ".tag_with_link" do
   it "should return a link with a span" do

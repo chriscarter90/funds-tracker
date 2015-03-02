@@ -1,6 +1,6 @@
 source 'https://rubygems.org'
 
-ruby '2.0.0', patchlevel: '247'
+ruby '2.2.0'
 
 gem 'rails'
 gem 'pg'
@@ -16,7 +16,7 @@ gem 'devise'
 
 gem 'launchy'
 
-gem 'tabnav', github: 'unboxed/tabnav', branch: 'add-ul-styling'
+gem 'tabnav', github: 'unboxed/tabnav', branch: 'master'
 
 gem 'simple_form', '~> 3.1.0.rc1'
 gem 'simplecov'
@@ -39,7 +39,7 @@ group :test, :development do
   gem 'capybara'
   gem 'faker'
   gem 'pry'
-  gem 'pry-debugger'
+  gem 'pry-byebug'
   gem 'timecop'
 end
 

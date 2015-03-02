@@ -16,7 +16,7 @@ ActiveRecord::Schema.define(version: 20140816211035) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
-  create_table "accounts", force: true do |t|
+  create_table "accounts", force: :cascade do |t|
     t.string  "name"
     t.integer "user_id"
     t.decimal "starting_balance"
@@ -25,14 +25,14 @@ ActiveRecord::Schema.define(version: 20140816211035) do
 
   add_index "accounts", ["user_id"], name: "index_accounts_on_user_id", using: :btree
 
-  create_table "tags", force: true do |t|
+  create_table "tags", force: :cascade do |t|
     t.string  "name"
     t.integer "user_id"
   end
 
   add_index "tags", ["user_id"], name: "index_tags_on_user_id", using: :btree
 
-  create_table "transactions", force: true do |t|
+  create_table "transactions", force: :cascade do |t|
     t.string   "description"
     t.decimal  "amount"
     t.integer  "account_id"
@@ -45,7 +45,7 @@ ActiveRecord::Schema.define(version: 20140816211035) do
   add_index "transactions", ["account_id"], name: "index_transactions_on_account_id", using: :btree
   add_index "transactions", ["tag_id"], name: "index_transactions_on_tag_id", using: :btree
 
-  create_table "transfers", force: true do |t|
+  create_table "transfers", force: :cascade do |t|
     t.integer  "to_account_id"
     t.integer  "from_account_id"
     t.decimal  "amount"
@@ -54,7 +54,7 @@ ActiveRecord::Schema.define(version: 20140816211035) do
     t.datetime "updated_at"
   end
 
-  create_table "users", force: true do |t|
+  create_table "users", force: :cascade do |t|
     t.string   "email",                  default: "", null: false
     t.string   "encrypted_password",     default: "", null: false
     t.string   "reset_password_token"

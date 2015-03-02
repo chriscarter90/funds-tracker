@@ -42,7 +42,7 @@ class AccountsController < ApplicationController
   end
 
   def tagged
-    @transactions = current_user.transactions.tagged_with(@tag)
+    @transactions = current_user.transactions.tagged_with(@tag).newest_first
 
     if @transactions.any?
       @starting_amount = 0

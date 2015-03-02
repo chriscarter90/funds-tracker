@@ -1,4 +1,4 @@
-require 'spec_helper'
+require 'rails_helper'
 
 describe TagsController, "GET #index" do
   context "As a non-logged in user" do
