@@ -33,6 +33,12 @@ class TransfersController < ApplicationController
     end
   end
 
+  def destroy
+    @transfer.destroy
+
+    redirect_to transfers_path, flash: { success: "Transfer successfully deleted." }
+  end
+
   protected
 
   def transfer_params

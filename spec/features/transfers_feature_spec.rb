@@ -165,5 +165,23 @@ feature "Transfers", %q{
         expect(page).to have_content("Transfer could not be found.")
       end
     end
+
+    scenario "deleting an account" do
+      FactoryGirl.create(:transfer, transfer_date: "01-03-2015", amount: 200,
+                         to_account:   FactoryGirl.create(:account, user: @user, name: "Account #2"),
+                         from_account: FactoryGirl.create(:account, user: @user, name: "Account #1"))
+
+      visit transfers_path
+
+      expect(page).to have_link("Delete")
+
+      click_link "Delete"
+
+      expect(current_path).to eq transfers_path
+
+      expect(page).to_not have_content("1st March 2015")
+
+      expect(page).to have_content("Transfer successfully deleted.")
+    end
   end
 end

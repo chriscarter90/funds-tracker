@@ -268,3 +268,68 @@ describe TransfersController, "PATCH #update" do
     end
   end
 end
+
+describe TransfersController, "DELETE #destroy" do
+  context "As a non-logged in user" do
+    before do
+      transfer = FactoryGirl.create(:transfer)
+
+      delete :destroy, id: transfer
+    end
+
+    it "redirects to the login page" do
+      expect(response).to redirect_to new_user_session_path
+    end
+  end
+
+  context "As a logged in user" do
+    before do
+      @user = FactoryGirl.create(:user)
+      sign_in @user
+    end
+
+    context "deleting a transfer on their account" do
+      before do
+        @transfer = FactoryGirl.create(:transfer, transfer_date: "01-03-2015",
+                                       to_account:   FactoryGirl.create(:account, user: @user),
+                                       from_account: FactoryGirl.create(:account, user: @user))
+
+        delete :destroy, id: @transfer
+      end
+
+      it "deletes the transfer" do
+        expect(@user.transfers.count).to eq 0
+        expect(@user.transfers.last).to be_nil
+      end
+
+      it "redirects back to transfers" do
+        expect(response).to redirect_to transfers_path
+      end
+
+      it "sets flash" do
+        expect(flash[:success]).to eq "Transfer successfully deleted."
+      end
+    end
+
+    context "deleting a transfer on someone else's account" do
+      before do
+        @transfer = FactoryGirl.create(:transfer)
+
+        delete :destroy, id: @transfer
+      end
+
+      it "should not delete the transfer" do
+        expect(Transfer.count).to eq 1
+        expect(Transfer.last).to eq @transfer
+      end
+
+      it "should redirect back to the transfers page" do
+        expect(response).to redirect_to(transfers_path)
+      end
+
+      it "should set flash" do
+        expect(flash[:error]).to eq "Transfer could not be found."
+      end
+    end
+  end
+end
