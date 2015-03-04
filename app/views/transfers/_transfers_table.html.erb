@@ -22,6 +22,9 @@
         <td>
           <%= as_currency(t.amount) %>
         </td>
+        <td>
+          <%= link_to "Edit", edit_transfer_path(t), class: "btn btn-warning" %>
+        </td>
       </tr>
     <% end %>
   </tbody>

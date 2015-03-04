@@ -10,5 +10,5 @@ FundsTracker::Application.routes.draw do
       get '/tagged/:tag_id', to: 'transactions#tagged', as: :tagged, on: :collection
     end
   end
-  resources :transfers, only: [:index, :new, :create]
+  resources :transfers, only: [:index, :new, :create, :edit, :update]
 end

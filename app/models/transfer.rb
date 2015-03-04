@@ -19,7 +19,7 @@ class Transfer < ActiveRecord::Base
 
   def different_accounts
     if to_account_id == from_account_id
-      errors.add(:base, "cannot be between the same account")
+      errors.add(:to_account, "can't be between the same as the from account")
     end
   end
 end

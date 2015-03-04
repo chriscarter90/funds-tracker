@@ -128,3 +128,143 @@ describe TransfersController, "POST #create" do
     end
   end
 end
+
+describe TransfersController, "GET #edit" do
+  context "As a non-logged in user" do
+    before do
+      transfer = FactoryGirl.create(:transfer)
+
+      get :edit, id: transfer
+    end
+
+    it "redirects to the login page" do
+      expect(response).to redirect_to new_user_session_path
+    end
+  end
+
+  context "As a logged in user" do
+    before do
+      @user = FactoryGirl.create(:user)
+      sign_in @user
+    end
+
+    context "with an transfer" do
+      before do
+        @transfer = FactoryGirl.create(:transfer, transfer_date: "01-03-2015",
+                                       to_account:   FactoryGirl.create(:account, user: @user),
+                                       from_account: FactoryGirl.create(:account, user: @user))
+
+        get :edit, id: @transfer
+      end
+
+      it "should assign the transfer" do
+        expect(assigns(:transfer)).to eq @transfer
+      end
+
+      it "should render the edit template" do
+        expect(response).to render_template :edit
+      end
+    end
+
+    context "accessing a transfer which isn't theirs" do
+      before do
+        transfer = FactoryGirl.create(:transfer)
+
+        get :edit, id: transfer
+      end
+
+      it "redirects to the index" do
+        expect(response).to redirect_to transfers_path
+      end
+
+      it "sets flash" do
+        expect(flash[:error]).to eq "Transfer could not be found."
+      end
+    end
+  end
+end
+
+describe TransfersController, "PATCH #update" do
+  context "As a non-logged in user" do
+    before do
+      transfer = FactoryGirl.create(:transfer)
+
+      patch :update, id: transfer, transfer: { transfer_date: "01-03-2015" }
+    end
+
+    it "redirects to the login page" do
+      expect(response).to redirect_to new_user_session_path
+    end
+  end
+
+  context "As a logged in user" do
+    before do
+      @user = FactoryGirl.create(:user)
+      sign_in @user
+    end
+
+    context "updating an transfer which is theirs" do
+      before do
+        @transfer = FactoryGirl.create(:transfer, transfer_date: "01-03-2015",
+                                       to_account:   FactoryGirl.create(:account, user: @user),
+                                       from_account: FactoryGirl.create(:account, user: @user))
+      end
+
+      context "with valid params" do
+        before do
+          patch :update, id: @transfer, transfer: { transfer_date: "31-01-2015" }
+        end
+
+        it "updates the transfer" do
+          expect(@transfer.reload.transfer_date).to eq Date.parse("31-01-2015")
+        end
+
+        it "should redirect to index" do
+          expect(response).to redirect_to transfers_path
+        end
+
+        it "should set flash" do
+          expect(flash[:success]).to eq "Transfer successfully updated."
+        end
+      end
+
+      context "with invalid params" do
+        before do
+          patch :update, id: @transfer, transfer: { transfer_date: nil }
+        end
+
+        it "doesn't update transfer" do
+          expect(@transfer.reload.transfer_date).to eq Date.parse("01-03-2015")
+        end
+
+        it "should render edit" do
+          expect(response).to render_template :edit
+        end
+
+        it "should set flash" do
+          expect(flash[:error]).to eq "Transfer not updated."
+        end
+      end
+    end
+
+    context "updating someone elses transfer" do
+      before do
+        @transfer = FactoryGirl.create(:transfer, transfer_date: "03-01-2015")
+
+        patch :update, id: @transfer, transfer: { transfer_date: "14-02-2015" }
+      end
+
+      it "doesn't update transfer" do
+        expect(@transfer.reload.transfer_date).to eq Date.parse("03-01-2015")
+      end
+
+      it "should redirect to index" do
+        expect(response).to redirect_to transfers_path
+      end
+
+      it "should set flash" do
+        expect(flash[:error]).to eq "Transfer could not be found."
+      end
+    end
+  end
+end

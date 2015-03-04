@@ -18,6 +18,16 @@ feature "Transfers", %q{
 
       expect(page).to have_content("You need to sign in or sign up before continuing.")
     end
+
+    scenario "Trying to edit an existing transfer" do
+      transfer = FactoryGirl.create(:transfer)
+
+      visit edit_transfer_path(transfer)
+
+      expect(current_path).to eq new_user_session_path
+
+      expect(page).to have_content("You need to sign in or sign up before continuing.")
+    end
   end
 
   context "As a logged in user" do
@@ -97,6 +107,62 @@ feature "Transfers", %q{
         expect(page).to have_table_rows_in_order(
           ["1st January 2014", "Account #1", "Account #2", "£21.04"],
         )
+      end
+    end
+
+    context "editing a transfer" do
+      scenario "as the user whose transfer it is" do
+        FactoryGirl.create(:transfer, transfer_date: "01-03-2015", amount: 200,
+                           to_account:   FactoryGirl.create(:account, user: @user, name: "Account #2"),
+                           from_account: FactoryGirl.create(:account, user: @user, name: "Account #1"))
+
+        visit transfers_path
+
+        expect(page).to have_table_rows_in_order(
+          ["1st March 2015", "Account #1", "Account #2", "£200.00"],
+        )
+
+        expect(page).to have_link("Edit")
+        click_link("Edit")
+
+        expect(page).to have_content("Edit Transfer")
+        expect(page).to have_field("Amount", with: "200.00")
+        expect(page).to have_field("Transfer date", with: "01-03-2015")
+        expect(page).to have_select("From account", options: ["-- Select an account --", "Account #1", "Account #2"], selected: "Account #1")
+        expect(page).to have_select("To account", options: ["-- Select an account --", "Account #1", "Account #2"], selected: "Account #2")
+
+        fill_in "Amount", with: nil
+        click_button "Update Transfer"
+
+        expect(page).to have_content("Transfer not updated.")
+
+        within ".transfer_amount" do
+          expect(page).to have_content("can't be blank")
+        end
+
+        fill_in "Amount", with: 500
+        click_button "Update Transfer"
+
+        expect(current_path).to eq transfers_path
+        expect(page).to have_content("Transfer successfully updated.")
+
+        expect(page).to have_table_rows_in_order(
+          ["1st March 2015", "Account #1", "Account #2", "£500.00"],
+        )
+      end
+
+      scenario "as a different user" do
+        transfer = FactoryGirl.create(:transfer, transfer_date: "25-12-2014")
+
+        visit transfers_path
+
+        expect(page).to_not have_content("25th December 2014")
+
+        visit edit_transfer_path(transfer)
+
+        expect(current_path).to eq transfers_path
+
+        expect(page).to have_content("Transfer could not be found.")
       end
     end
   end
