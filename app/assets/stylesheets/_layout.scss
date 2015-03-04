@@ -25,3 +25,12 @@
     padding-bottom: 3px;
   }
 }
+
+/*
+ *  A naff override to ensure that datepickers appear
+ *  above multi-part input boxes
+ */
+
+.ui-datepicker {
+  z-index: 100 !important;
+}
