@@ -1,0 +1,24 @@
+<%= simple_form_for @transfer, html: { class: 'form-horizontal' },
+  wrapper: :horizontal_form,
+  wrapper_mappings: {
+    check_boxes: :horizontal_radio_and_checkboxes,
+    radio_buttons: :horizontal_radio_and_checkboxes,
+    file: :horizontal_file_input,
+    boolean: :horizontal_boolean,
+    currency: :horizontal_input_with_text
+  } do |f| %>
+
+  <%= f.input :transfer_date, as: :datepicker, required: true, input_html: { class: 'form-control', value: format_date(f.object.transfer_date || Date.today, :default) } %>
+
+  <%= f.input :amount, placeholder: "Amount", as: :currency, input_group_text: t("number.currency.format.unit"), input_html: { class: 'form-control', value: number_with_precision(f.object.amount, precision: 2) } %>
+
+  <%= f.association :from_account, collection: current_user.accounts, label_method: :name, value_method: :id, include_blank: '-- Select an account --' %>
+
+  <%= f.association :to_account, collection: current_user.accounts, label_method: :name, value_method: :id, include_blank: '-- Select an account --' %>
+
+  <div class="form-group">
+    <div class="col-md-offset-2 col-md-10 col-xs-12">
+      <%= f.submit class: "btn btn-primary" %>
+    </div>
+  </div>
+<% end %>
