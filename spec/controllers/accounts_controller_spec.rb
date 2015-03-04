@@ -262,6 +262,69 @@ describe AccountsController, "PATCH #update" do
   end
 end
 
+describe AccountsController, "DELETE #destroy" do
+  context "As a non-logged in user" do
+    before do
+      account = FactoryGirl.create(:account)
+
+      delete :destroy, id: account
+    end
+
+    it "redirects to the login page" do
+      expect(response).to redirect_to new_user_session_path
+    end
+  end
+
+  context "As a logged in user" do
+    before do
+      @user = FactoryGirl.create(:user)
+      sign_in @user
+    end
+
+    context "deleting an account" do
+      before do
+        @account = FactoryGirl.create(:account, user: @user)
+
+        delete :destroy, id: @account
+      end
+
+      it "deletes the account" do
+        expect(@user.accounts.count).to eq 0
+        expect(@user.accounts.last).to be_nil
+      end
+
+      it "redirects back to accounts" do
+        expect(response).to redirect_to accounts_path
+      end
+
+      it "sets flash" do
+        expect(flash[:success]).to eq "Account successfully deleted."
+      end
+    end
+
+    context "deleting an account for someone else" do
+      before do
+        @account = FactoryGirl.create(:account)
+
+        delete :destroy, id: @account
+      end
+
+      it "should not delete the account" do
+        expect(Account.count).to eq 1
+        expect(Account.last).to eq @account
+      end
+
+      it "should redirect back to the accounts page" do
+        expect(response).to redirect_to(accounts_path)
+      end
+
+      it "should set flash" do
+        expect(flash[:error]).to eq "Account could not be found."
+      end
+    end
+  end
+end
+
 describe AccountsController, "GET #tagged" do
   context "As a non-logged in user" do
     before do
