@@ -10,6 +10,14 @@ describe Transfer, 'validations' do
   it { should allow_value(Date.today).for(:transfer_date) }
   it { should allow_value(2.days.ago).for(:transfer_date) }
   it { should allow_value(2.weeks.ago).for(:transfer_date) }
+
+  context "transferring between the same account" do
+    it "should not be valid" do
+      account = FactoryGirl.create(:account)
+
+      expect(FactoryGirl.build(:transfer, to_account: account, from_account: account)).not_to be_valid
+    end
+  end
 end
 
 describe Transfer, "relationships" do
