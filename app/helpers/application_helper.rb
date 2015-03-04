@@ -1,6 +1,8 @@
 module ApplicationHelper
   def bootstrap_class_for(flash_type)
     case flash_type
+    when Symbol
+      bootstrap_class_for(flash_type.to_s)
     when "success"
       "alert-success"   # Green
     when "error"
@@ -10,7 +12,7 @@ module ApplicationHelper
     when "notice"
       "alert-info"      # Blue
     else
-      bootstrap_class_for(flash_type.to_s)
+      ""
     end
   end
 
