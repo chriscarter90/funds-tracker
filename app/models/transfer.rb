@@ -1,6 +1,7 @@
 class Transfer < ActiveRecord::Base
 
   validates :to_account, :from_account, :amount, :transfer_date, presence: true
+  validates :amount, numericality: { greater_than_or_equal_to: 0 }
   validate :transfer_date_cannot_be_in_the_future
   validate :different_accounts
 

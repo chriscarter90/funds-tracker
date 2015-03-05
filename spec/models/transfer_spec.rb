@@ -3,7 +3,14 @@ require 'rails_helper'
 describe Transfer, 'validations' do
   it { should validate_presence_of :to_account }
   it { should validate_presence_of :from_account }
+
   it { should validate_presence_of :amount }
+  it { should_not allow_value(-10).for(:amount) }
+  it { should_not allow_value(-100.01).for(:amount) }
+  it { should allow_value(0).for(:amount) }
+  it { should allow_value(0.01).for(:amount) }
+  it { should allow_value(10).for(:amount) }
+
   it { should validate_presence_of :transfer_date }
   it { should_not allow_value(2.days.from_now).for(:transfer_date) }
   it { should_not allow_value(2.weeks.from_now).for(:transfer_date) }
