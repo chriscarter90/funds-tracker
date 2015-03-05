@@ -14,10 +14,10 @@
           <%= format_date(t.transfer_date, :longer) %>
         </td>
         <td>
-          <%= link_to t.from_account.name, account_path(t.from_account) %>
+          <%= link_to t.from_account.name, account_transactions_path(t.from_account) %>
         </td>
         <td>
-          <%= link_to t.to_account.name, account_path(t.to_account) %>
+          <%= link_to t.to_account.name, account_transactions_path(t.to_account) %>
         </td>
         <td>
           <%= as_currency(t.amount) %>
