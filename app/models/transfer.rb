@@ -11,6 +11,30 @@ class Transfer < ActiveRecord::Base
 
   scope :newest_first, -> { order(transfer_date: :desc) }
 
+  def the_date
+    transfer_date
+  end
+
+  def calculate_amount(account)
+    if account == to_account
+      amount
+    elsif account == from_account
+      -1 * amount
+    else
+      0
+    end
+  end
+
+  def display_name(account)
+    if account == to_account
+      "Transfer in from " + from_account.name
+    elsif account == from_account
+      "Transfer out to " + to_account.name
+    else
+      ""
+    end
+  end
+
   private
   def transfer_date_cannot_be_in_the_future
     if transfer_date.present? && transfer_date > Date.today

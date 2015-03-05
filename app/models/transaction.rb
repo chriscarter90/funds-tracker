@@ -13,6 +13,14 @@ class Transaction < ActiveRecord::Base
   scope :before, ->(t) { where("transaction_date < ? OR transaction_date = ? AND id < ?", t.transaction_date, t.transaction_date, t.id) }
   scope :tagged_with, ->(tag) { where(tag_id: tag)  }
 
+  def the_date
+    transaction_date
+  end
+
+  def calculate_amount(account)
+    amount
+  end
+
   def update_account_balance
     account.update_balance
     account.save

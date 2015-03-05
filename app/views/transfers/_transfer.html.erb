@@ -1,0 +1,19 @@
+<tr>
+  <td>
+    <%= format_date(transfer.transfer_date, :longer) %>
+  </td>
+  <td>
+    <%= transfer.display_name(@account) %>
+  </td>
+  <td></td>
+  <td>
+    <%= as_currency(transfer.calculate_amount(@account)) %>
+  </td>
+  <td>
+    <%= as_currency(total) %>
+  </td>
+  <td>
+    <%= link_to "Edit", edit_transfer_path(transfer), class: "btn btn-warning" %>
+    <%= link_to "Delete", transfer_path(transfer), method: :delete, class: "btn btn-danger", data: { confirm: "Are you sure you want to delete this transfer?" } %>
+  </td>
+</tr>

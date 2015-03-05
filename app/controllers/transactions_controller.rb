@@ -8,14 +8,24 @@ class TransactionsController < ApplicationController
     params[:page] ||= 1
     per_page = 10
 
-    @transactions = @account.transactions.newest_first.page(params[:page]).per(per_page)
+    @transactions  = @account.transactions.newest_first  #.page(params[:page]).per(per_page)
+    @transfers_out = @account.transfers_out.newest_first #.page(params[:page]).per(per_page)
+    @transfers_in  = @account.transfers_in.newest_first  #.page(params[:page]).per(per_page)
 
-    if @transactions.any?
+    if @transactions.any? || @transfers_out.any? || @transfers_in.any?
       @starting_amount = @account.balance_up_to(@transactions.last)
-      # The following line does NOT work if you use `sum(:amount)` instead of `pluck(:amount).sum`
+      # The following lines do NOT work if you use `sum(:amount)` instead of `pluck(:amount).sum`
       # If you use sum(:amount), then it LIMIT/OFFSETs AFTER doing the sum so returns no rows :(
       @ending_amount = @starting_amount + @transactions.pluck(:amount).sum
+      @ending_amount = @ending_amount   - @transfers_out.pluck(:amount).sum
+      @ending_amount = @ending_amount   + @transfers_in.pluck(:amount).sum
     end
+
+    @things = [@transactions, @transfers_in, @transfers_out].flatten.sort do |x, y|
+      y.the_date <=> x.the_date
+    end
+
+    Kaminari.paginate_array(@things).page(params[:page]).per(per_page)
 
     @tags = current_user.tags
   end
