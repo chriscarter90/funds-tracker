@@ -1,46 +1,26 @@
 require 'rails_helper'
 
-describe Transfer, 'validations' do
-  it { should validate_presence_of :to_account }
-  it { should validate_presence_of :from_account }
-
-  it { should validate_presence_of :amount }
-  it { should_not allow_value(-10).for(:amount) }
-  it { should_not allow_value(-100.01).for(:amount) }
-  it { should allow_value(0).for(:amount) }
-  it { should allow_value(0.01).for(:amount) }
-  it { should allow_value(10).for(:amount) }
-
-  it { should validate_presence_of :transfer_date }
-  it { should_not allow_value(2.days.from_now).for(:transfer_date) }
-  it { should_not allow_value(2.weeks.from_now).for(:transfer_date) }
-  it { should allow_value(Date.today).for(:transfer_date) }
-  it { should allow_value(2.days.ago).for(:transfer_date) }
-  it { should allow_value(2.weeks.ago).for(:transfer_date) }
-
-  context "transferring between the same account" do
-    it "should not be valid" do
-      account = FactoryGirl.create(:account)
-
-      expect(FactoryGirl.build(:transfer, to_account: account, from_account: account)).not_to be_valid
-    end
-  end
+describe Transfer, "includes" do
+  it_behaves_like "a transactable object"
 end
 
-describe Transfer, "relationships" do
-  it { should belong_to(:to_account).class_name('Account') }
-  it { should belong_to(:from_account).class_name('Account') }
-  it { should have_one(:user).through(:from_account) }
+describe Transfer, "validations" do
+  it { should validate_presence_of :other_account }
+  it { should validate_presence_of :account_transaction }
+  it { should accept_nested_attributes_for :account_transaction }
 end
 
-describe Transfer, "scopes" do
-  describe ".newest_first" do
-    it "should return them with the newest transfer first" do
-      t1 = FactoryGirl.create(:transfer, transfer_date: 4.days.ago)
-      t2 = FactoryGirl.create(:transfer, transfer_date: 2.days.ago)
-      t3 = FactoryGirl.create(:transfer, transfer_date: 6.days.ago)
+describe Transfer, "methods" do
+  describe "#description" do
+    it "should generate a description based on the source and destination accounts" do
+      acc1 = FactoryGirl.create(:account, id: 55)
+      acc2 = FactoryGirl.create(:account, id: 123)
 
-      expect(Transfer.newest_first).to eq [t2, t1, t3]
+      transfer = FactoryGirl.create(:transfer, other_account: acc1,
+                                    account_transaction: FactoryGirl.create(:account_transaction, account: acc2)
+                                   )
+
+      expect(transfer.description).to eq "Money transferred between #123 and #55."
     end
   end
 end

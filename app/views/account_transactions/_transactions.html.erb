@@ -1,4 +1,4 @@
-<% @transactions.inject(@ending_amount) do |total, transaction| %>
+<% @account_transactions.inject(@ending_amount) do |total, transaction| %>
   <tr>
     <td>
       <%= format_date(transaction.transaction_date, :longer) %>
@@ -7,9 +7,7 @@
       <%= transaction.description %>
     </td>
     <td>
-      <% if transaction.tag.present? %>
-        <%= tag_with_link(transaction.tag, tagged_account_transactions_path(@account, transaction.tag)) %>
-      <% end %>
+      TAGS GO HERE
     </td>
     <td>
       <%= as_currency(transaction.amount) %>
@@ -18,8 +16,8 @@
       <%= as_currency(total) %>
     </td>
     <td>
-      <%= link_to "Edit", edit_account_transaction_path(@account, transaction), class: "btn btn-warning" %>
-      <%= link_to "Delete", account_transaction_path(@account, transaction), method: :delete, class: "btn btn-danger", data: { confirm: "Are you sure you want to delete this transaction?" } %>
+      <%= link_to "Edit", edit_account_payment_path(@account, transaction.transactable), class: "btn btn-warning" %>
+      <%= link_to "Delete", account_payment_path(@account, transaction), method: :delete, class: "btn btn-danger", data: { confirm: "Are you sure you want to delete this transaction?" } %>
     </td>
   </tr>
   <%- total - transaction.amount %>

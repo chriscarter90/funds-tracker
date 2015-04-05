@@ -1,4 +1,4 @@
-<%= simple_form_for [@account, @transfer], html: { class: 'form-horizontal' },
+<%= simple_form_for [@account, @payment], html: { class: 'form-horizontal' },
   wrapper: :horizontal_form,
   wrapper_mappings: {
     check_boxes: :horizontal_radio_and_checkboxes,
@@ -8,7 +8,7 @@
     currency: :horizontal_input_with_text
   } do |f| %>
 
-  <%= f.association :other_account, collection: current_user.accounts, label_method: :name, value_method: :id, include_blank: '-- Select an account --' %>
+  <%= f.input :description, placeholder: "Description", autofocus: true %>
 
   <%= f.simple_fields_for :account_transaction do |fa| %>
 
@@ -17,6 +17,8 @@
     <%= fa.input :transaction_date, as: :datepicker, required: true, input_html: { class: 'form-control', value: format_date(fa.object.transaction_date || Date.today, :default) } %>
 
   <% end %>
+
+  <%#= f.association :tag, collection: current_user.tags, label_method: :name, value_method: :id, include_blank: '-- Select a tag --' %>
 
   <div class="form-group">
     <div class="col-md-offset-2 col-md-10 col-xs-12">

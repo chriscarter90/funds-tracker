@@ -9,29 +9,10 @@ end
 
 describe Account, 'relationships' do
   it { should belong_to :user }
-  it { should have_many(:transactions).dependent(:destroy) }
-  it { should have_many(:transfers_out).class_name("Transfer").source(:from_account) }
-  it { should have_many(:transfers_in).class_name("Transfer").source(:to_account) }
-end
-
-describe Account, 'callbacks' do
-  describe 'after save' do
-    it 'should set the current balance' do
-      account = FactoryGirl.build(:account, starting_balance: 100, current_balance: nil)
-
-      account.save!
-      expect(account.current_balance).to eq 100
-    end
-
-    it 'should set the current balance based on the transactions' do
-      account = FactoryGirl.create(:account, starting_balance: 100)
-
-      account.transactions << FactoryGirl.create(:transaction, amount: 50)
-
-      account.save!
-      expect(account.current_balance).to eq 150
-    end
-  end
+  it { should have_many(:account_transactions).dependent(:destroy) }
+  it { should have_many(:payments).through(:account_transactions).source(:transactable) }
+  it { should have_many(:transfers).through(:account_transactions).source(:transactable) }
+  it { should have_many(:other_transfers).class_name("Transfer") }
 end
 
 describe Account, 'scopes' do
@@ -46,18 +27,38 @@ describe Account, 'scopes' do
   end
 end
 
+describe Account, 'callbacks' do
+  describe 'after save' do
+    it 'should set the current balance' do
+      account = FactoryGirl.build(:account, starting_balance: 100, current_balance: nil)
+
+      account.save!
+      expect(account.current_balance).to eq 100
+    end
+
+    it 'should set the current balance based on the transactions' do
+      account = FactoryGirl.create(:account, starting_balance: 100)
+
+      account.account_transactions << FactoryGirl.create(:account_transaction, amount: 50)
+
+      account.save!
+      expect(account.current_balance).to eq 150
+    end
+  end
+end
+
 describe Account, 'methods' do
   describe 'balance_up_to' do
     it "should only return the starting balance plus all those transactions before the one provided" do
-      @account = FactoryGirl.create(:account, starting_balance: 100)
+      account = FactoryGirl.create(:account, starting_balance: 100)
 
-      @t = FactoryGirl.create(:transaction, account: @account, transaction_date: 3.days.ago, amount: 10)
+      t = FactoryGirl.create(:account_transaction, account: account, transaction_date: 3.days.ago, amount: 10)
 
-      @account.transactions << [FactoryGirl.create(:transaction, transaction_date: 4.days.ago, amount: 50),
-                                FactoryGirl.create(:transaction, transaction_date: 2.days.ago, amount: 20),
-                                FactoryGirl.create(:transaction, transaction_date: 5.days.ago, amount: 25)]
+      account.account_transactions << [FactoryGirl.create(:account_transaction, transaction_date: 4.days.ago, amount: 50),
+                                       FactoryGirl.create(:account_transaction, transaction_date: 2.days.ago, amount: 20),
+                                       FactoryGirl.create(:account_transaction, transaction_date: 5.days.ago, amount: 25)]
 
-      expect(@account.balance_up_to(@t)).to eq 175
+      expect(account.balance_up_to(t)).to eq 175
     end
   end
 end

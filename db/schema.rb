@@ -11,10 +11,22 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140816211035) do
+ActiveRecord::Schema.define(version: 20150322201924) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "account_transactions", force: :cascade do |t|
+    t.decimal  "amount"
+    t.integer  "account_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.date     "transaction_date"
+    t.integer  "transactable_id"
+    t.string   "transactable_type"
+  end
+
+  add_index "account_transactions", ["account_id"], name: "index_account_transactions_on_account_id", using: :btree
 
   create_table "accounts", force: :cascade do |t|
     t.string  "name"
@@ -25,6 +37,14 @@ ActiveRecord::Schema.define(version: 20140816211035) do
 
   add_index "accounts", ["user_id"], name: "index_accounts_on_user_id", using: :btree
 
+  create_table "payments", force: :cascade do |t|
+    t.integer  "account_transaction_id"
+    t.string   "description"
+    t.integer  "tag_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
   create_table "tags", force: :cascade do |t|
     t.string  "name"
     t.integer "user_id"
@@ -32,24 +52,9 @@ ActiveRecord::Schema.define(version: 20140816211035) do
 
   add_index "tags", ["user_id"], name: "index_tags_on_user_id", using: :btree
 
-  create_table "transactions", force: :cascade do |t|
-    t.string   "description"
-    t.decimal  "amount"
-    t.integer  "account_id"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-    t.date     "transaction_date"
-    t.integer  "tag_id"
-  end
-
-  add_index "transactions", ["account_id"], name: "index_transactions_on_account_id", using: :btree
-  add_index "transactions", ["tag_id"], name: "index_transactions_on_tag_id", using: :btree
-
   create_table "transfers", force: :cascade do |t|
-    t.integer  "to_account_id"
-    t.integer  "from_account_id"
-    t.decimal  "amount"
-    t.date     "transfer_date"
+    t.integer  "account_transaction_id"
+    t.integer  "other_account_id"
     t.datetime "created_at"
     t.datetime "updated_at"
   end

@@ -12,19 +12,25 @@ FactoryGirl.define do
     user
   end
 
-  factory :transaction do
-    description { Faker::Lorem.words(7).join(" ") }
+  factory :account_transaction do
     # Generates an amount anywhere between £1 and £9.99
     amount { 1 + (rand(899)/100.00) }
     account
     transaction_date { 2.weeks.ago }
   end
 
+  factory :payment do
+    description { Faker::Lorem.words(7).join(" ") }
+    account_transaction
+  end
+
   factory :transfer do
-    association :to_account, factory: :account
-    association :from_account, factory: :account
-    amount { 1 + (rand(899)/100.00) }
-    transfer_date { 2.weeks.ago }
+    association :other_account, factory: :account
+    account_transaction
+
+    trait :with_tag do
+      tag
+    end
   end
 
   factory :user do
