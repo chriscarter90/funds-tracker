@@ -1,41 +1,11 @@
 require 'rails_helper'
 
-describe TransfersController, "GET #index" do
-  context "As a non-logged in user" do
-     before do
-       get :index
-     end
-
-     it "redirects to the login page" do
-       expect(response).to redirect_to new_user_session_path
-     end
-  end
-
-  context "As a logged in user" do
-    before do
-      user = FactoryGirl.create(:user)
-      sign_in user
-
-      a1 = FactoryGirl.create(:account, user: user)
-      a2 = FactoryGirl.create(:account, user: user)
-
-      @t1 = FactoryGirl.create(:transfer, to_account: a1, from_account: a2, transfer_date: "01-08-2014")
-      @t2 = FactoryGirl.create(:transfer, to_account: a1, from_account: a2, transfer_date: "03-08-2014")
-      @t3 = FactoryGirl.create(:transfer, to_account: a1, from_account: a2, transfer_date: "31-07-2014")
-
-      get :index
-    end
-
-    it "assigns their transfers" do
-      expect(assigns(:transfers)).to eq [@t2, @t1, @t3]
-    end
-  end
-end
-
 describe TransfersController, "GET #new" do
   context "As a non-logged in user" do
     before do
-      get :new
+      account = FactoryGirl.create(:account)
+
+      get :new, account_id: account
     end
 
     it "redirects to the login page" do
@@ -43,12 +13,19 @@ describe TransfersController, "GET #new" do
     end
   end
 
-  context "As a logged in user" do
+  context "As an authorised user" do
     before do
       user = FactoryGirl.create(:user)
+
+      @account = FactoryGirl.create(:account, user: user)
+
       sign_in user
 
-      get :new
+      get :new, account_id: @account
+    end
+
+    it "assigns the account" do
+      expect(assigns(:account)).to eq @account
     end
 
     it "assigns a new transfer" do
@@ -59,14 +36,34 @@ describe TransfersController, "GET #new" do
       expect(response).to render_template :new
     end
   end
+
+  context "As an unauthorised user" do
+    before do
+      user = FactoryGirl.create(:user)
+
+      @account = FactoryGirl.create(:account)
+
+      sign_in user
+
+      get :new, account_id: @account
+    end
+
+    it "redirects to the accounts page" do
+      expect(response).to redirect_to accounts_path
+    end
+
+    it "sets flash" do
+      expect(flash[:error]).to eq "Account could not be found."
+    end
+  end
 end
 
 describe TransfersController, "POST #create" do
   context "As a non-logged in user" do
     before do
-      transfer_attrs = FactoryGirl.attributes_for(:transfer)
+      account = FactoryGirl.create(:account)
 
-      post :create, transfer: transfer_attrs
+      post :create, account_id: account, transfer: {}
     end
 
     it "redirects to the login page" do
@@ -74,32 +71,37 @@ describe TransfersController, "POST #create" do
     end
   end
 
-  context "As a logged in user" do
+  context "As an authorised user" do
     before do
       @user = FactoryGirl.create(:user)
+
+      @account = FactoryGirl.create(:account, user: @user)
+
       sign_in @user
     end
 
     context "with valid params" do
       before do
-        @to_account = FactoryGirl.create(:account, user: @user)
-        @from_account = FactoryGirl.create(:account, user: @user)
+        other_account = FactoryGirl.create(:account, user: @user)
 
-        valid_params = FactoryGirl.attributes_for(:transfer, transfer_date: "01-03-2015").merge(
-                                                    to_account_id: @to_account.id,
-                                                    from_account_id: @from_account.id
-                                                 )
+        valid_params = {
+          other_account_id: other_account.id,
+          account_transaction_attributes: {
+            amount: "500",
+            transaction_date: "13-04-2015"
+          }
+        }
 
-        post :create, transfer: valid_params
+        post :create, account_id: @account, transfer: valid_params
       end
 
-      it "creates a new transfer for the user" do
-        expect(@user.transfers.count).to eq 1
-        expect(@user.transfers.last.transfer_date).to eq Date.parse("01-03-2015")
+      it "creates a new transfer for the account" do
+        expect(@account.transfers.count).to eq 1
+        expect(@account.transfers.last.transaction_date).to eq Date.parse("13-04-2015")
       end
 
-      it "should redirect to index" do
-        expect(response).to redirect_to transfers_path
+      it "should redirect to the transaction list" do
+        expect(response).to redirect_to account_account_transactions_path(@account)
       end
 
       it "should set flash" do
@@ -109,13 +111,19 @@ describe TransfersController, "POST #create" do
 
     context "with invalid params" do
       before do
-        invalid_params = FactoryGirl.attributes_for(:transfer, transfer_date: nil)
+        invalid_params = {
+          other_account_id: nil,
+          account_transaction_attributes: {
+            amount: "500",
+            transaction_date: "13-04-2015"
+          }
+        }
 
-        post :create, transfer: invalid_params
+        post :create, account_id: @account, transfer: invalid_params
       end
 
-      it "doesn't create an transfer" do
-        expect(@user.transfers.count).to eq 0
+      it "doesn't create a transfer" do
+        expect(@account.transfers.count).to eq 0
       end
 
       it "should render new" do
@@ -127,14 +135,35 @@ describe TransfersController, "POST #create" do
       end
     end
   end
+
+  context "As an unauthorised user" do
+    before do
+      user = FactoryGirl.create(:user)
+
+      sign_in user
+
+      @account = FactoryGirl.create(:account)
+
+      post :create, account_id: @account, transfer: {}
+    end
+
+    it "redirects to accounts page" do
+      expect(response).to redirect_to accounts_path
+    end
+
+    it "sets flash" do
+      expect(flash[:error]).to eq "Account could not be found."
+    end
+  end
 end
 
 describe TransfersController, "GET #edit" do
   context "As a non-logged in user" do
     before do
-      transfer = FactoryGirl.create(:transfer)
+      account = FactoryGirl.create(:account)
+      transfer = FactoryGirl.create(:transfer, account_transaction: FactoryGirl.create(:account_transaction, account: account))
 
-      get :edit, id: transfer
+      get :edit, account_id: account, id: transfer
     end
 
     it "redirects to the login page" do
@@ -142,44 +171,49 @@ describe TransfersController, "GET #edit" do
     end
   end
 
-  context "As a logged in user" do
+  context "As an authorised user" do
     before do
       @user = FactoryGirl.create(:user)
+
+      @account = FactoryGirl.create(:account, user: @user)
+      @transfer = FactoryGirl.create(:transfer, account_transaction: FactoryGirl.create(:account_transaction, account: @account))
+
       sign_in @user
+
+      get :edit, account_id: @account, id: @transfer
     end
 
-    context "with an transfer" do
-      before do
-        @transfer = FactoryGirl.create(:transfer, transfer_date: "01-03-2015",
-                                       to_account:   FactoryGirl.create(:account, user: @user),
-                                       from_account: FactoryGirl.create(:account, user: @user))
-
-        get :edit, id: @transfer
-      end
-
-      it "should assign the transfer" do
-        expect(assigns(:transfer)).to eq @transfer
-      end
-
-      it "should render the edit template" do
-        expect(response).to render_template :edit
-      end
+    it "should assign the account" do
+      expect(assigns(:account)).to eq @account
     end
 
-    context "accessing a transfer which isn't theirs" do
-      before do
-        transfer = FactoryGirl.create(:transfer)
+    it "should assign the transfer" do
+      expect(assigns(:transfer)).to eq @transfer
+    end
 
-        get :edit, id: transfer
-      end
+    it "should render the edit template" do
+      expect(response).to render_template :edit
+    end
+  end
 
-      it "redirects to the index" do
-        expect(response).to redirect_to transfers_path
-      end
+  context "As an unauthorised user" do
+    before do
+      user = FactoryGirl.create(:user)
 
-      it "sets flash" do
-        expect(flash[:error]).to eq "Transfer could not be found."
-      end
+      account = FactoryGirl.create(:account)
+      transfer = FactoryGirl.create(:transfer, account_transaction: FactoryGirl.create(:account_transaction, account: account))
+
+      sign_in user
+
+      get :edit, account_id: account, id: transfer
+    end
+
+    it "redirects to the index" do
+      expect(response).to redirect_to accounts_path
+    end
+
+    it "sets flash" do
+      expect(flash[:error]).to eq "Account could not be found."
     end
   end
 end
@@ -187,9 +221,10 @@ end
 describe TransfersController, "PATCH #update" do
   context "As a non-logged in user" do
     before do
-      transfer = FactoryGirl.create(:transfer)
+      account = FactoryGirl.create(:account)
+      transfer = FactoryGirl.create(:transfer, account_transaction: FactoryGirl.create(:account_transaction, account: account))
 
-      patch :update, id: transfer, transfer: { transfer_date: "01-03-2015" }
+      patch :update, account_id: account, id: transfer, transfer: { other_account_id: 1 }
     end
 
     it "redirects to the login page" do
@@ -197,73 +232,84 @@ describe TransfersController, "PATCH #update" do
     end
   end
 
-  context "As a logged in user" do
+  context "As an authorised user" do
     before do
       @user = FactoryGirl.create(:user)
+
+      @account = FactoryGirl.create(:account, user: @user)
+      @other_account = FactoryGirl.create(:account, user: @user)
+      @transfer = FactoryGirl.create(:transfer, other_account_id: @other_account.id,
+                                     account_transaction: FactoryGirl.create(:account_transaction, amount: 20, account: @account))
+
       sign_in @user
     end
 
-    context "updating an transfer which is theirs" do
+    context "with valid params" do
       before do
-        @transfer = FactoryGirl.create(:transfer, transfer_date: "01-03-2015",
-                                       to_account:   FactoryGirl.create(:account, user: @user),
-                                       from_account: FactoryGirl.create(:account, user: @user))
+        @yet_another_account = FactoryGirl.create(:account, user: @user)
+
+        patch :update, account_id: @account, id: @transfer, transfer: { other_account_id: @yet_another_account.id,
+                                                                       account_transaction_attributes: {
+                                                                         amount: 50 } }
       end
 
-      context "with valid params" do
-        before do
-          patch :update, id: @transfer, transfer: { transfer_date: "31-01-2015" }
-        end
-
-        it "updates the transfer" do
-          expect(@transfer.reload.transfer_date).to eq Date.parse("31-01-2015")
-        end
-
-        it "should redirect to index" do
-          expect(response).to redirect_to transfers_path
-        end
-
-        it "should set flash" do
-          expect(flash[:success]).to eq "Transfer successfully updated."
-        end
-      end
-
-      context "with invalid params" do
-        before do
-          patch :update, id: @transfer, transfer: { transfer_date: nil }
-        end
-
-        it "doesn't update transfer" do
-          expect(@transfer.reload.transfer_date).to eq Date.parse("01-03-2015")
-        end
-
-        it "should render edit" do
-          expect(response).to render_template :edit
-        end
-
-        it "should set flash" do
-          expect(flash[:error]).to eq "Transfer not updated."
-        end
-      end
-    end
-
-    context "updating someone elses transfer" do
-      before do
-        @transfer = FactoryGirl.create(:transfer, transfer_date: "03-01-2015")
-
-        patch :update, id: @transfer, transfer: { transfer_date: "14-02-2015" }
-      end
-
-      it "doesn't update transfer" do
-        expect(@transfer.reload.transfer_date).to eq Date.parse("03-01-2015")
+      it "updates the transfer" do
+        expect(@transfer.reload.other_account).to eq @yet_another_account
+        expect(@transfer.account_transaction.reload.amount).to eq 50
       end
 
       it "should redirect to index" do
-        expect(response).to redirect_to transfers_path
+        expect(response).to redirect_to account_account_transactions_path(@account)
       end
 
       it "should set flash" do
-        expect(flash[:error]).to eq "Transfer could not be found."
+        expect(flash[:success]).to eq "Transfer successfully updated."
+      end
+    end
+
+    context "with invalid params" do
+      before do
+        patch :update, account_id: @account, id: @transfer, transfer: { other_account_id: nil,
+                                                                       account_transaction_attributes: {
+                                                                         amount: 50 } }
+      end
+
+      it "doesn't update transfer" do
+        expect(@transfer.reload.other_account).to eq @other_account
+        expect(@transfer.account_transaction.reload.amount).to eq 20
+      end
+
+      it "should render edit" do
+        expect(response).to render_template :edit
+      end
+
+      it "should set flash" do
+        expect(flash[:error]).to eq "Transfer not updated."
+      end
+    end
+
+    context "As a unauthorised user" do
+      before do
+        @user = FactoryGirl.create(:user)
+
+        @account = FactoryGirl.create(:account)
+        @other_account = FactoryGirl.create(:account)
+        @transfer = FactoryGirl.create(:transfer, other_account_id: @other_account.id,
+                                       account_transaction: FactoryGirl.create(:account_transaction, account: @account))
+
+        patch :update, account_id: @account, id: @transfer, transfer: { other_account_id: 4 }
+      end
+
+      it "doesn't update transfer" do
+        expect(@transfer.reload.other_account).to eq @other_account
+      end
+
+      it "should redirect to index" do
+        expect(response).to redirect_to accounts_path
+      end
+
+      it "should set flash" do
+        expect(flash[:error]).to eq "Account could not be found."
       end
     end
   end
@@ -272,9 +318,10 @@ end
 describe TransfersController, "DELETE #destroy" do
   context "As a non-logged in user" do
     before do
-      transfer = FactoryGirl.create(:transfer)
+      account = FactoryGirl.create(:account)
+      transfer = FactoryGirl.create(:transfer, account_transaction: FactoryGirl.create(:account_transaction, account: account))
 
-      delete :destroy, id: transfer
+      delete :destroy, account_id: account, id: transfer
     end
 
     it "redirects to the login page" do
@@ -282,54 +329,55 @@ describe TransfersController, "DELETE #destroy" do
     end
   end
 
-  context "As a logged in user" do
+  context "As an authorised user" do
     before do
-      @user = FactoryGirl.create(:user)
-      sign_in @user
+      user = FactoryGirl.create(:user)
+
+      @account = FactoryGirl.create(:account, user: user)
+      transfer = FactoryGirl.create(:transfer, account_transaction: FactoryGirl.create(:account_transaction, account: @account))
+
+      sign_in user
+
+      delete :destroy, account_id: @account, id: transfer
     end
 
-    context "deleting a transfer on their account" do
-      before do
-        @transfer = FactoryGirl.create(:transfer, transfer_date: "01-03-2015",
-                                       to_account:   FactoryGirl.create(:account, user: @user),
-                                       from_account: FactoryGirl.create(:account, user: @user))
-
-        delete :destroy, id: @transfer
-      end
-
-      it "deletes the transfer" do
-        expect(@user.transfers.count).to eq 0
-        expect(@user.transfers.last).to be_nil
-      end
-
-      it "redirects back to transfers" do
-        expect(response).to redirect_to transfers_path
-      end
-
-      it "sets flash" do
-        expect(flash[:success]).to eq "Transfer successfully deleted."
-      end
+    it "deletes the transfer" do
+      expect(@account.transfers.count).to eq 0
+      expect(@account.transfers.last).to be_nil
     end
 
-    context "deleting a transfer on someone else's account" do
-      before do
-        @transfer = FactoryGirl.create(:transfer)
+    it "redirects back to transactions" do
+      expect(response).to redirect_to account_account_transactions_path(@account)
+    end
 
-        delete :destroy, id: @transfer
-      end
+    it "sets flash" do
+      expect(flash[:success]).to eq "Transfer successfully deleted."
+    end
+  end
 
-      it "should not delete the transfer" do
-        expect(Transfer.count).to eq 1
-        expect(Transfer.last).to eq @transfer
-      end
+  context "As an unauthorised user" do
+    before do
+      user = FactoryGirl.create(:user)
 
-      it "should redirect back to the transfers page" do
-        expect(response).to redirect_to(transfers_path)
-      end
+      @account = FactoryGirl.create(:account)
+      @transfer = FactoryGirl.create(:transfer, account_transaction: FactoryGirl.create(:account_transaction, account: @account))
 
-      it "should set flash" do
-        expect(flash[:error]).to eq "Transfer could not be found."
-      end
+      sign_in user
+
+      delete :destroy, account_id: @account, id: @transfer
+    end
+
+    it "should not delete the transfer" do
+      expect(@account.transfers.count).to eq 1
+      expect(@account.transfers.last).to eq @transfer
+    end
+
+    it "should redirect back to the accounts page" do
+      expect(response).to redirect_to(accounts_path)
+    end
+
+    it "should set flash" do
+      expect(flash[:error]).to eq "Account could not be found."
     end
   end
 end

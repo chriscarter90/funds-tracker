@@ -5,7 +5,6 @@ class TransfersController < ApplicationController
 
   def new
     @transfer = @account.transfers.build
-    @transfer.build_account_transaction
   end
 
   def create

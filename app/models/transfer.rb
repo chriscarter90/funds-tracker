@@ -5,7 +5,7 @@ class Transfer < ActiveRecord::Base
 
   belongs_to :other_account, class_name: "Account", inverse_of: false
 
-  accepts_nested_attributes_for :account_transaction
+  accepts_nested_attributes_for :account_transaction, update_only: true
 
   def description
     "Money transferred between ##{account_transaction.account_id} and ##{other_account_id}."

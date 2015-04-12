@@ -344,17 +344,17 @@ describe AccountsController, "GET #tagged" do
       sign_in @user
     end
 
-    context "accessing tagged transactions for their account" do
+    context "accessing tagged payments for their account" do
       before do
         account_1 = FactoryGirl.create(:account, user: @user)
         account_2 = FactoryGirl.create(:account, user: @user)
 
         @tag_1 = FactoryGirl.create(:tag, user: @user)
 
-        @t1 = FactoryGirl.create(:transaction, account: account_1, tag: @tag_1)
-              FactoryGirl.create(:transaction, account: account_1)
-        @t3 = FactoryGirl.create(:transaction, account: account_2, tag: @tag_1)
-        @t4 = FactoryGirl.create(:transaction, account: account_1, tag: @tag_1)
+        @p1 = FactoryGirl.create(:payment, tag: @tag_1, account_transaction: FactoryGirl.create(:account_transaction, account: account_1))
+              FactoryGirl.create(:payment, account_transaction: FactoryGirl.create(:account_transaction, account: account_2))
+        @p3 = FactoryGirl.create(:payment, tag: @tag_1, account_transaction: FactoryGirl.create(:account_transaction, account: account_1))
+        @p4 = FactoryGirl.create(:payment, tag: @tag_1, account_transaction: FactoryGirl.create(:account_transaction, account: account_1))
 
         get :tagged, tag_id: @tag_1
       end
@@ -364,7 +364,7 @@ describe AccountsController, "GET #tagged" do
       end
 
       it "should assign transactions with the ones tagged" do
-        expect(assigns(:transactions)).to match_array([@t1, @t3, @t4])
+        expect(assigns(:payments)).to match_array([@p1, @p3, @p4])
       end
     end
 

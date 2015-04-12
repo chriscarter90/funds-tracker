@@ -5,14 +5,13 @@ class PaymentsController < ApplicationController
 
   def new
     @payment = @account.payments.build
-    @payment.build_account_transaction
   end
 
   def create
     @payment = @account.payments.build(payment_params)
     @payment.account_transaction.account_id = params[:account_id]
 
-    if @payment.account_transaction.save && @payment.save
+    if @payment.save
       redirect_to account_account_transactions_path(@account), flash: { success: "Payment successfully created." }
     else
       flash[:error] = "Payment not created."

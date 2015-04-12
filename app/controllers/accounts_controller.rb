@@ -42,11 +42,11 @@ class AccountsController < ApplicationController
   end
 
   def tagged
-    @transactions = current_user.transactions.tagged_with(@tag).newest_first
+    @payments = current_user.payments.tagged_with(@tag).newest_first
 
-    if @transactions.any?
+    if @payments.any?
       @starting_amount = 0
-      @ending_amount = @starting_amount + @transactions.pluck(:amount).sum
+      @ending_amount = @starting_amount + @payments.map(&:amount).sum
     end
   end
 

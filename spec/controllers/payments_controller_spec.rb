@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-describe AccountTransactionsController, "GET #new" do
+describe PaymentsController, "GET #new" do
   context "As a non-logged in user" do
     before do
       account = FactoryGirl.create(:account)
@@ -28,8 +28,8 @@ describe AccountTransactionsController, "GET #new" do
       expect(assigns(:account)).to eq @account
     end
 
-    it "assigns a new transaction" do
-      expect(assigns(:transaction)).to be_a_new Transaction
+    it "assigns a new payment" do
+      expect(assigns(:payment)).to be_a_new Payment
     end
 
     it "renders the new template" do
@@ -58,14 +58,12 @@ describe AccountTransactionsController, "GET #new" do
   end
 end
 
-describe AccountTransactionsController, "POST #create" do
+describe PaymentsController, "POST #create" do
   context "As a non-logged in user" do
     before do
-      @account = FactoryGirl.create(:account)
+      account = FactoryGirl.create(:account)
 
-      valid_params = FactoryGirl.attributes_for(:transaction)
-
-      post :create, account_id: @account, transaction: valid_params
+      post :create, account_id: account, payment: {}
     end
 
     it "should redirect to the login page" do
@@ -84,34 +82,46 @@ describe AccountTransactionsController, "POST #create" do
 
     context "with valid params" do
       before do
-        valid_params = FactoryGirl.attributes_for(:transaction, description: "A Transaction")
+        valid_params = {
+          description: "A Payment",
+          account_transaction_attributes: {
+            amount: "500",
+            transaction_date: "12-04-2015"
+          }
+        }
 
-        post :create, account_id: @account, transaction: valid_params
+        post :create, account_id: @account, payment: valid_params
       end
 
       it "creates a new transaction for the account" do
-        expect(@account.transactions.count).to eq 1
-        expect(@account.transactions.last.description).to eq "A Transaction"
+        expect(@account.payments.count).to eq 1
+        expect(@account.payments.last.description).to eq "A Payment"
       end
 
       it "redirects back to the transaction list" do
-        expect(response).to redirect_to account_transactions_path(@account)
+        expect(response).to redirect_to account_account_transactions_path(@account)
       end
 
       it "sets flash" do
-        expect(flash[:success]).to eq "Transaction successfully created."
+        expect(flash[:success]).to eq "Payment successfully created."
       end
     end
 
     context "with invalid params" do
       before do
-        invalid_params = FactoryGirl.attributes_for(:transaction, description: "")
+        invalid_params = {
+          description: "",
+          account_transaction_attributes: {
+            amount: "500",
+            transaction_date: "12-04-2015"
+          }
+        }
 
-        post :create, account_id: @account, transaction: invalid_params
+        post :create, account_id: @account, payment: invalid_params
       end
 
-      it "doesn't create a transaction" do
-        expect(@account.transactions.count).to eq 0
+      it "doesn't create a payment" do
+        expect(@account.payments.count).to eq 0
       end
 
       it "renders new" do
@@ -119,7 +129,7 @@ describe AccountTransactionsController, "POST #create" do
       end
 
       it "sets flash" do
-        expect(flash[:error]).to eq "Transaction not created."
+        expect(flash[:error]).to eq "Payment not created."
       end
     end
   end
@@ -132,9 +142,7 @@ describe AccountTransactionsController, "POST #create" do
 
       @account = FactoryGirl.create(:account)
 
-      valid_params = FactoryGirl.attributes_for(:transaction)
-
-      post :create, account_id: @account, transaction: valid_params
+      post :create, account_id: @account, payment: {}
     end
 
     it "redirects to accounts page" do
@@ -147,13 +155,13 @@ describe AccountTransactionsController, "POST #create" do
   end
 end
 
-describe AccountTransactionsController, "GET #edit" do
+describe PaymentsController, "GET #edit" do
   context "As a non-logged in user" do
     before do
       account = FactoryGirl.create(:account)
-      transaction = FactoryGirl.create(:transaction, account: account)
+      payment = FactoryGirl.create(:payment, account_transaction: FactoryGirl.create(:account_transaction, account: account))
 
-      get :edit, account_id: account, id: transaction
+      get :edit, account_id: account, id: payment
     end
 
     it "redirects to the login page" do
@@ -166,19 +174,19 @@ describe AccountTransactionsController, "GET #edit" do
       user = FactoryGirl.create(:user)
 
       @account = FactoryGirl.create(:account, user: user)
-      @transaction = FactoryGirl.create(:transaction, account: @account)
+      @payment = FactoryGirl.create(:payment, account_transaction: FactoryGirl.create(:account_transaction, account: @account))
 
       sign_in user
 
-      get :edit, account_id: @account, id: @transaction
+      get :edit, account_id: @account, id: @payment
     end
 
     it "should assign the account" do
       expect(assigns(:account)).to eq @account
     end
 
-    it "should assign the transaction" do
-      expect(assigns(:transaction)).to eq @transaction
+    it "should assign the payment" do
+      expect(assigns(:payment)).to eq @payment
     end
 
     it "should render edit" do
@@ -191,11 +199,11 @@ describe AccountTransactionsController, "GET #edit" do
       user = FactoryGirl.create(:user)
 
       account = FactoryGirl.create(:account)
-      transaction = FactoryGirl.create(:transaction, account: account)
+      payment = FactoryGirl.create(:payment, account_transaction: FactoryGirl.create(:account_transaction, account: account))
 
       sign_in user
 
-      get :edit, account_id: account, id: transaction
+      get :edit, account_id: account, id: payment
     end
 
     it "should redirect back to accounts" do
@@ -208,13 +216,13 @@ describe AccountTransactionsController, "GET #edit" do
   end
 end
 
-describe AccountTransactionsController, "PATCH #update" do
+describe PaymentsController, "PATCH #update" do
   context "As a non-logged in user" do
     before do
       account = FactoryGirl.create(:account)
-      transaction = FactoryGirl.create(:transaction, account: account)
+      payment = FactoryGirl.create(:payment, account_transaction: FactoryGirl.create(:account_transaction, account: account))
 
-      patch :update, account_id: account, id: transaction, transaction: { description: "New Description" }
+      patch :update, account_id: account, id: payment, payment: { description: "New Description" }
     end
 
     it "redirects to the login page" do
@@ -222,67 +230,74 @@ describe AccountTransactionsController, "PATCH #update" do
     end
   end
 
-  context "As a logged in user" do
+  context "As an authorised user" do
     before do
       @user = FactoryGirl.create(:user)
+
+      @account = FactoryGirl.create(:account, user: @user)
+      @payment = FactoryGirl.create(:payment, description: "A Payment",
+                                    account_transaction: FactoryGirl.create(:account_transaction, amount: 12, account: @account))
+
       sign_in @user
     end
 
-    context "updating a transaction on their account" do
+    context "with valid params" do
       before do
-        @account = FactoryGirl.create(:account, user: @user)
-        @transaction = FactoryGirl.create(:transaction, description: "A Transaction", amount: 12, account: @account)
+        patch :update, account_id: @account, id: @payment, payment: { description: "Updated Payment",
+                                                                      account_transaction_attributes: {
+                                                                        amount: 20 } }
       end
 
-      context "with valid params" do
-        before do
-          patch :update, account_id: @account, id: @transaction, transaction: { description: "Updated Transaction", amount: 20 }
-        end
-
-        it "updates the transaction" do
-          expect(@transaction.reload.description).to eq "Updated Transaction"
-          expect(@transaction.reload.amount).to eq 20
-        end
-
-        it "should redirect back to the account" do
-          expect(response).to redirect_to account_transactions_path(@account)
-        end
-
-        it "should set flash" do
-          expect(flash[:success]).to eq "Transaction successfully updated."
-        end
+      it "updates the payment" do
+        expect(@payment.reload.description).to eq "Updated Payment"
+        expect(@payment.account_transaction.reload.amount).to eq 20
       end
 
-      context "with invalid params" do
-        before do
-          patch :update, account_id: @account, id: @transaction, transaction: { description: "", amount: 45 }
-        end
+      it "should redirect back to the account" do
+        expect(response).to redirect_to account_account_transactions_path(@account)
+      end
 
-        it "doesn't update the transaction" do
-          expect(@transaction.reload.description).to eq "A Transaction"
-          expect(@transaction.reload.amount).to eq 12
-        end
-
-        it "should render edit" do
-          expect(response).to render_template :edit
-        end
-
-        it "should set flash" do
-          expect(flash[:error]).to eq "Transaction not updated."
-        end
+      it "should set flash" do
+        expect(flash[:success]).to eq "Payment successfully updated."
       end
     end
 
-    context "updating someone elses transaction" do
+    context "with invalid params" do
       before do
-        @account = FactoryGirl.create(:account, name: "Someone elses account")
-        @transaction = FactoryGirl.create(:transaction, description: "Someone elses transaction", amount: 12, account: @account)
-
-        patch :update, account_id: @account, id: @transaction, transaction: { description: "Mine now" }
+        patch :update, account_id: @account, id: @payment, payment: { description: "",
+                                                                      account_transaction_attributes: {
+                                                                        amount: 20 } }
       end
 
-      it "doesn't update the transaction" do
-        expect(@transaction.reload.description).to eq "Someone elses transaction"
+      it "doesn't update the payment" do
+        expect(@payment.reload.description).to eq "A Payment"
+        expect(@payment.account_transaction.reload.amount).to eq 12
+      end
+
+      it "should render edit" do
+        expect(response).to render_template :edit
+      end
+
+      it "should set flash" do
+        expect(flash[:error]).to eq "Payment not updated."
+      end
+    end
+
+    context "As an unauthorised user" do
+      before do
+        @user = FactoryGirl.create(:user)
+
+        @account = FactoryGirl.create(:account)
+        @payment = FactoryGirl.create(:payment, description: "Someone elses payment",
+                                      account_transaction: FactoryGirl.create(:account_transaction, account: @account))
+
+        sign_in @user
+
+        patch :update, account_id: @account, id: @payment, payment: { description: "Mine now" }
+      end
+
+      it "doesn't update the payment" do
+        expect(@payment.reload.description).to eq "Someone elses payment"
       end
 
       it "redirects to the account list" do
@@ -296,13 +311,13 @@ describe AccountTransactionsController, "PATCH #update" do
   end
 end
 
-describe AccountTransactionsController, "DELETE #destroy" do
+describe PaymentsController, "DELETE #destroy" do
   context "As a non-logged in user" do
     before do
       account = FactoryGirl.create(:account)
-      transaction = FactoryGirl.create(:transaction, account: account)
+      payment = FactoryGirl.create(:payment, account_transaction: FactoryGirl.create(:account_transaction, account: account))
 
-      delete :destroy, account_id: account, id: transaction
+      delete :destroy, account_id: account, id: payment
     end
 
     it "redirects to the login page" do
@@ -310,55 +325,55 @@ describe AccountTransactionsController, "DELETE #destroy" do
     end
   end
 
-  context "As a logged in user" do
+  context "As an authorised user" do
     before do
-      @user = FactoryGirl.create(:user)
-      sign_in @user
+      user = FactoryGirl.create(:user)
+
+      @account = FactoryGirl.create(:account, user: user)
+      payment = FactoryGirl.create(:payment, account_transaction: FactoryGirl.create(:account_transaction, account: @account))
+
+      sign_in user
+
+      delete :destroy, account_id: @account, id: payment
     end
 
-    context "deleting a transaction on their account" do
-      before do
-        @account = FactoryGirl.create(:account, user: @user)
-        transaction = FactoryGirl.create(:transaction, account: @account)
-
-        delete :destroy, account_id: @account, id: transaction
-      end
-
-      it "should delete the transaction" do
-        expect(@account.transactions.count).to eq 0
-        expect(@account.transactions.last).to be_nil
-      end
-
-      it "should redirect back to the account" do
-        expect(response).to redirect_to account_transactions_path(@account)
-      end
-
-      it "should set flash" do
-        expect(flash[:success]).to eq "Transaction successfully deleted."
-      end
+    it "deletes the payment" do
+      expect(@account.payments.count).to eq 0
+      expect(@account.payments.last).to be_nil
     end
 
-    context "deleting a transaction on someone else's account" do
-      before do
-        @account = FactoryGirl.create(:account)
-        @transaction = FactoryGirl.create(:transaction, account: @account)
+    it "redirects back to transactions" do
+      expect(response).to redirect_to account_account_transactions_path(@account)
+    end
 
-        delete :destroy, account_id: @account, id: @transaction
-      end
+    it "sets flash" do
+      expect(flash[:success]).to eq "Payment successfully deleted."
+    end
+  end
 
-      it "should not delete the transaction" do
-        expect(@account.transactions.count).to eq 1
-        expect(@account.transactions.last).to eq @transaction
-      end
+  context "As an unauthorised user" do
+    before do
+      user = FactoryGirl.create(:user)
 
-      it "should redirect back to the accounts page" do
-        expect(response).to redirect_to(accounts_path)
-      end
+      @account = FactoryGirl.create(:account)
+      @payment = FactoryGirl.create(:payment, account_transaction: FactoryGirl.create(:account_transaction, account: @account))
 
-      it "should set flash" do
-        expect(flash[:error]).to eq "Account could not be found."
-      end
+      sign_in user
+
+      delete :destroy, account_id: @account, id: @payment
+    end
+
+    it "should not delete the payment" do
+      expect(@account.payments.count).to eq 1
+      expect(@account.payments.last).to eq @payment
+    end
+
+    it "should redirect back to the accounts page" do
+      expect(response).to redirect_to(accounts_path)
+    end
+
+    it "should set flash" do
+      expect(flash[:error]).to eq "Account could not be found."
     end
   end
 end
-
