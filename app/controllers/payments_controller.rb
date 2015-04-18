@@ -5,6 +5,7 @@ class PaymentsController < ApplicationController
 
   def new
     @payment = @account.payments.build
+    @payment.build_account_transaction
   end
 
   def create
