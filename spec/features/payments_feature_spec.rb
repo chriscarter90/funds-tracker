@@ -17,7 +17,7 @@ feature "Payments", %q{
       expect(page).to have_content("You need to sign in or sign up before continuing.")
     end
 
-    scenario "Trying to edit an existing transaction" do
+    scenario "Trying to edit an existing payment" do
       payment = FactoryGirl.create(:payment,
                                    account_transaction: FactoryGirl.create(:account_transaction,
                                                                            account: @account)

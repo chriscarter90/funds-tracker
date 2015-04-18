@@ -9,6 +9,7 @@ class Account < ActiveRecord::Base
   has_many :other_transfers, class_name: "Transfer", inverse_of: :other_account, foreign_key: :other_account_id
 
   scope :by_name, -> { order(name: :asc) }
+  scope :excluding, ->(account) { where.not(id: account.id) }
 
   before_save :update_balance
 

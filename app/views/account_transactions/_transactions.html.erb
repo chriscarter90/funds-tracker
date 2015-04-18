@@ -16,8 +16,13 @@
       <%= as_currency(total) %>
     </td>
     <td>
+    <% if transaction.is_a?(Payment) %>
       <%= link_to "Edit", edit_account_payment_path(@account, transaction.transactable), class: "btn btn-warning" %>
-      <%= link_to "Delete", account_payment_path(@account, transaction.transactable), method: :delete, class: "btn btn-danger", data: { confirm: "Are you sure you want to delete this transaction?" } %>
+      <%= link_to "Delete", account_payment_path(@account, transaction.transactable), method: :delete, class: "btn btn-danger", data: { confirm: "Are you sure you want to delete this payment?" } %>
+    <% else %>
+      <%= link_to "Edit", edit_account_transfer_path(@account, transaction.transactable), class: "btn btn-warning" %>
+      <%= link_to "Delete", account_transfer_path(@account, transaction.transactable), method: :delete, class: "btn btn-danger", data: { confirm: "Are you sure you want to delete this transfer?" } %>
+    <% end %>
     </td>
   </tr>
   <%- total - transaction.amount %>

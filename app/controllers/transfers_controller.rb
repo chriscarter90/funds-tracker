@@ -5,13 +5,14 @@ class TransfersController < ApplicationController
 
   def new
     @transfer = @account.transfers.build
+    @transfer.build_account_transaction
   end
 
   def create
     @transfer = @account.transfers.build(transfer_params)
     @transfer.account_transaction.account_id = params[:account_id]
 
-    if @transfer.account_transaction.save && @transfer.save
+    if @transfer.save
       redirect_to account_account_transactions_path(@account), flash: { success: "Transfer successfully created." }
     else
       flash[:error] = "Transfer not created."
