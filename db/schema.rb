@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150322201924) do
+ActiveRecord::Schema.define(version: 20150626134648) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -40,17 +40,9 @@ ActiveRecord::Schema.define(version: 20150322201924) do
   create_table "payments", force: :cascade do |t|
     t.integer  "account_transaction_id"
     t.string   "description"
-    t.integer  "tag_id"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
-
-  create_table "tags", force: :cascade do |t|
-    t.string  "name"
-    t.integer "user_id"
-  end
-
-  add_index "tags", ["user_id"], name: "index_tags_on_user_id", using: :btree
 
   create_table "transfers", force: :cascade do |t|
     t.integer  "account_transaction_id"

@@ -15,10 +15,7 @@
     <%= fa.input :amount, placeholder: "Amount", as: :currency, input_group_text: t("number.currency.format.unit"), input_html: { class: 'form-control', value: number_with_precision(fa.object.amount, precision: 2) } %>
 
     <%= fa.input :transaction_date, as: :datepicker, required: true, input_html: { class: 'form-control', value: format_date(fa.object.transaction_date || Date.today, :default) } %>
-
   <% end %>
-
-  <%#= f.association :tag, collection: current_user.tags, label_method: :name, value_method: :id, include_blank: '-- Select a tag --' %>
 
   <div class="form-group">
     <div class="col-md-offset-2 col-md-10 col-xs-12">

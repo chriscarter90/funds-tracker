@@ -20,17 +20,11 @@ describe AccountsController, "GET #index" do
       @a2 = FactoryGirl.create(:account, name: "Account C", user: user)
       @a3 = FactoryGirl.create(:account, name: "Account A", user: user)
 
-      user.tags = FactoryGirl.create_list(:tag, 4, user: user)
-
       get :index
     end
 
     it "assigns their accounts" do
       expect(assigns(:accounts)).to eq [@a3, @a1, @a2]
-    end
-
-    it "assigns their tags" do
-      expect(assigns(:tags).size).to eq 4
     end
   end
 end
@@ -320,67 +314,6 @@ describe AccountsController, "DELETE #destroy" do
 
       it "should set flash" do
         expect(flash[:error]).to eq "Account could not be found."
-      end
-    end
-  end
-end
-
-describe AccountsController, "GET #tagged" do
-  context "As a non-logged in user" do
-    before do
-      tag = FactoryGirl.create(:tag)
-
-      get :tagged, tag_id: tag
-    end
-
-    it "redirects to the login page" do
-      expect(response).to redirect_to new_user_session_path
-    end
-  end
-
-  context "As a logged in user" do
-    before do
-      @user = FactoryGirl.create(:user)
-      sign_in @user
-    end
-
-    context "accessing tagged payments for their account" do
-      before do
-        account_1 = FactoryGirl.create(:account, user: @user)
-        account_2 = FactoryGirl.create(:account, user: @user)
-
-        @tag_1 = FactoryGirl.create(:tag, user: @user)
-
-        @p1 = FactoryGirl.create(:payment, tag: @tag_1, account_transaction: FactoryGirl.create(:account_transaction, account: account_1))
-              FactoryGirl.create(:payment, account_transaction: FactoryGirl.create(:account_transaction, account: account_2))
-        @p3 = FactoryGirl.create(:payment, tag: @tag_1, account_transaction: FactoryGirl.create(:account_transaction, account: account_1))
-        @p4 = FactoryGirl.create(:payment, tag: @tag_1, account_transaction: FactoryGirl.create(:account_transaction, account: account_1))
-
-        get :tagged, tag_id: @tag_1
-      end
-
-      it "should assign the tag" do
-        expect(assigns(:tag)).to eq @tag_1
-      end
-
-      it "should assign transactions with the ones tagged" do
-        expect(assigns(:payments)).to match_array([@p1, @p3, @p4])
-      end
-    end
-
-    context "using someone else's tag" do
-      before do
-        other_tag = FactoryGirl.create(:tag)
-
-        get :tagged, tag_id: other_tag
-      end
-
-      it "should redirect back to accounts" do
-        expect(response).to redirect_to accounts_path
-      end
-
-      it "should set flash" do
-        expect(flash[:error]).to eq "Tag could not be found."
       end
     end
   end

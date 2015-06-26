@@ -10,5 +10,4 @@ class User < ActiveRecord::Base
   has_many :account_transactions, through: :accounts, dependent: :destroy
   has_many :payments, through: :account_transactions, source: :transactable, source_type: "Payment", inverse_of: false
   has_many :transfers, through: :account_transactions, source: :transactable, source_type: "Transfer", inverse_of: false
-  has_many :tags, dependent: :destroy
 end

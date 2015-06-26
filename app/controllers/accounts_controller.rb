@@ -1,11 +1,9 @@
 class AccountsController < ApplicationController
   before_action :authenticate_user!
   before_action :find_account, only: [:edit, :update, :destroy]
-  before_action :find_tag, only: [:tagged]
 
   def index
     @accounts = current_user.accounts.by_name
-    @tags = current_user.tags.by_name
   end
 
   def new
@@ -41,15 +39,6 @@ class AccountsController < ApplicationController
     redirect_to accounts_path, flash: { success: "Account successfully deleted." }
   end
 
-  def tagged
-    @payments = current_user.payments.tagged_with(@tag).newest_first
-
-    if @payments.any?
-      @starting_amount = 0
-      @ending_amount = @starting_amount + @payments.map(&:amount).sum
-    end
-  end
-
   protected
 
   def account_params
@@ -61,14 +50,6 @@ class AccountsController < ApplicationController
       @account = current_user.accounts.find(params[:id])
     rescue ActiveRecord::RecordNotFound
       redirect_to accounts_path, flash: { error: "Account could not be found." }
-    end
-  end
-
-  def find_tag
-    begin
-      @tag = current_user.tags.find(params[:tag_id])
-    rescue ActiveRecord::RecordNotFound
-      redirect_to accounts_path, flash: { error: "Tag could not be found." }
     end
   end
 end

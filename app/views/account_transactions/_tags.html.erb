@@ -1,9 +1,0 @@
-<h4>Tags</h4>
-
-<ul class="tags">
-  <% @tags.each do |t| %>
-    <li>
-      <%= tag_with_link(t, tagged_account_transactions_path(@account, t)) %>
-    </li>
-  <% end %>
-</ul>
