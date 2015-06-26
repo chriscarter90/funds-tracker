@@ -52,7 +52,7 @@ class TransfersController < ApplicationController
     begin
       @transfer = @account.transfers.find(params[:id])
     rescue ActiveRecord::RecordNotFound
-      redirect_to transfers_path, flash: { error: "Transfer could not be found." }
+      redirect_to account_account_transactions_path(@account), flash: { error: "Transfer could not be found." }
     end
   end
 
